@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Marvellissimo</string>
+    <string name="hero_name">Hero name</string>
+    <string name="heroname">HeroName</string>
 </resources>
