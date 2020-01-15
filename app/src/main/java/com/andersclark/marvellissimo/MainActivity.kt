@@ -2,11 +2,12 @@ package com.andersclark.marvellissimo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.recyclerview.widget.RecyclerView
 
-class MainActivity : AppCompatActivity()  {
+class MainActivity : AppCompatActivity(){
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +23,5 @@ class MainActivity : AppCompatActivity()  {
         val adapter = RecyclerAdapter()
         recycler_view.adapter = adapter
     }
-
 }
 
