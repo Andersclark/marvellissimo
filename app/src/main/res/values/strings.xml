@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Marvellissimo</string>
+    <string name="comics">Comics</string>
+    <string name="characters">Characters</string>
+    <string name="favorites">Favorites</string>
 </resources>
