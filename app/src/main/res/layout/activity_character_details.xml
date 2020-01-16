@@ -25,14 +25,14 @@
         android:layout_marginBottom="40dp"
         android:text="This is a Whole Othe Page Yo"
         app:layout_constraintBottom_toTopOf="@+id/backToMain"
-        app:layout_constraintEnd_toStartOf="@+id/image"
+        app:layout_constraintEnd_toStartOf="@+id/characterImage"
         app:layout_constraintHorizontal_bias="0.347"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameTitle" />
 
 
     <ImageView
-        android:id="@+id/image"
+        android:id="@+id/characterImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
