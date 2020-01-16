@@ -6,7 +6,6 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 class MainActivity : AppCompatActivity(){
 
@@ -57,40 +56,82 @@ class MainActivity : AppCompatActivity(){
         )
     )
 
+    private val comicArray = arrayOf(
+        MarvelCharacter(
+            "itemId",
+            "Spooderman",
+            "Here's a short description of this character",
+            "resourceURI"
+        ),
+        MarvelCharacter(
+            "itemId",
+            "Sooperman",
+            "Here's a short description of this character",
+            "resourceURI"
+        ),
+        MarvelCharacter(
+            "itemId",
+            "The Hoolk",
+            "Here's a short description of this character",
+            "resourceURI"
+        ),
+        MarvelCharacter(
+            "itemId",
+            "Raccoon goouy",
+            "Here's a short description of this character",
+            "resourceURI"
+        ),
+        MarvelCharacter(
+            "itemId",
+            "Grooooot",
+            "Here's a short description of this character",
+            "resourceURI"
+        ),
+        MarvelCharacter(
+            "itemId",
+            "Floosh",
+            "Here's a short description of this character",
+            "resourceURI"
+        ),
+        MarvelCharacter(
+            "itemId",
+            "Mr. Foontoostooooooc",
+            "Here's a short description of this character",
+            "resourceURI"
+        )
+    )
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createRecyclerView()
+        createRecyclerView(charArray)
+        checkRadioButtons()
     }
 
-    private fun createRecyclerView() {
+    private fun createRecyclerView(testArray: Array<MarvelCharacter>) {
         val layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
 
-        val adapter = RecyclerAdapter(checkRadioButtons())
+        val adapter = RecyclerAdapter(testArray)
         recycler_view.adapter = adapter
     }
 
-    private fun checkRadioButtons(): Array<MarvelCharacter> {
+    private fun checkRadioButtons() {
         group = radioGroup
         var testArray : Array<MarvelCharacter> = charArray
 
         group.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { _, _ ->
             if(group.checkedRadioButtonId == 2131230881) {
-                Log.d("RADIO", "Character")
-                testArray = charArray
+                createRecyclerView(charArray)
             }
             else if(group.checkedRadioButtonId == 2131230882) {
-                Log.d("RADIO", "Comic")
-                testArray = charArray
+                createRecyclerView(comicArray)
             }
             else if(group.checkedRadioButtonId == 2131230883) {
-                Log.d("RADIO", "Favorite")
-                testArray = charArray
+                //add code for favorites, when they exist later on
             }
         })
-        return testArray
     }
 
 }
