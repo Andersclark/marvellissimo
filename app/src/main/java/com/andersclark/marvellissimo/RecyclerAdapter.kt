@@ -1,11 +1,18 @@
 package com.andersclark.marvellissimo
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.andersclark.marvellissimo.entities.MarvelCharacter
+import com.andersclark.marvellissimo.services.MarvelClient
+import com.google.android.material.snackbar.Snackbar
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+private const val TAG = "RecyclerAdapter"
 
 class RecyclerAdapter (
    private val itemClickListener: OnItemClickListener
@@ -13,18 +20,25 @@ class RecyclerAdapter (
 
     interface OnItemClickListener { fun onCharacterItemClicked(character: MarvelCharacter)  }
 
+    // TODO: Remove dummy-data
     private val thumbnails = intArrayOf(R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3,
         R.drawable.android_image_4, R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3)
 
-    private val testChar = arrayOf(MarvelCharacter("itemId", "Spiderman", "Here's a short description of this character", "resourceURI"),
-        MarvelCharacter("itemId", "Superman", "Here's a short description of this character", "resourceURI"),
-        MarvelCharacter("itemId", "The Hulk", "Here's a short description of this character", "resourceURI"),
-        MarvelCharacter("itemId", "Raccoon guy", "Here's a short description of this character", "resourceURI"),
-        MarvelCharacter("itemId", "Groot", "Here's a short description of this character", "resourceURI"),
-        MarvelCharacter("itemId", "Flash", "Here's a short description of this character", "resourceURI"),
-        MarvelCharacter("itemId", "Mr. Fantastic", "Here's a short description of this character", "resourceURI"))
+    private var results =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { result, err ->
+            if (err?.message != null)
+                Log.d(TAG, "GET-FAIL: " + err.message)
+            else {
+                Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                chracterList.addAll(result.data.results)
+            }
+        }
+    private val chracterList = mutableListOf<MarvelCharacter>(
+      )
 
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
@@ -52,7 +66,7 @@ class RecyclerAdapter (
     }
 
     override fun getItemCount(): Int {
-        return testChar.size
+        return chracterList.size
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
