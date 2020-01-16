@@ -1,40 +1,22 @@
 package com.andersclark.marvellissimo
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.andersclark.marvellissimo.entities.MarvelCharacter
-import com.andersclark.marvellissimo.services.MarvelClient
+import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.google.android.material.snackbar.Snackbar
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+
 private const val TAG = "RecyclerAdapter"
 
-class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(var searchResults: List<MarvelEntity>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    // TODO: Remove dummy-data
     private val thumbnails = intArrayOf(R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3,
         R.drawable.android_image_4, R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3)
-
-    private var results =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
-        .subscribeOn(Schedulers.newThread())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { result, err ->
-            if (err?.message != null)
-                Log.d(TAG, "GET-FAIL: " + err.message)
-            else {
-                Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-                chracterList.addAll(result.data.results)
-            }
-        }
-    private val chracterList = mutableListOf<MarvelCharacter>(
-      )
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -63,12 +45,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return chracterList.size
+        return searchResults.size
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.itemName.text = chracterList[i].name
-        viewHolder.itemDescription.text = chracterList[i].description
+        viewHolder.itemName.text = searchResults[i].name
+        viewHolder.itemDescription.text = searchResults[i].description
 
         // TODO: Get image from characterList[i].thumbnail.path"
         viewHolder.itemThumbnail.setImageResource(thumbnails[i])

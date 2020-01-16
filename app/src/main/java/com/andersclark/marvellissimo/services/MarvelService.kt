@@ -1,5 +1,7 @@
 package com.andersclark.marvellissimo.services
-import com.andersclark.marvellissimo.entities.MarvelCharacterWrapper
+import com.andersclark.marvellissimo.entities.MarvelEntity
+import com.andersclark.marvellissimo.entities.MarvelResponse
+import com.andersclark.marvellissimo.entities.MarvelResponseData
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -11,7 +13,7 @@ interface MarvelService {
 @GET("characters")
 fun getCharacterById(
     @Query("characterId") id: String
-): Single<MarvelCharacterWrapper>
+): Single<MarvelResponse>
 
     @GET("characters")
     fun getCharacters(
@@ -20,7 +22,7 @@ fun getCharacterById(
         @Query("orderBy") orderBy: String? = null,
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
-    ): Single<MarvelCharacterWrapper>
+    ): Single<MarvelResponse>
 
     @GET("characters")
     fun searchCharacter(
@@ -29,14 +31,14 @@ fun getCharacterById(
         @Query("orderBy") orderBy: String? = "name",
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
-    ): Single<MarvelCharacterWrapper>
+    ): Single<MarvelResponse>
 
 // COMICS  //
 
     @GET("comics")
     fun getComicById(
         @Query("comicId") id: String
-    ): Single<MarvelCharacterWrapper>
+    ): Single<MarvelResponse>
 
     @GET("comics")
     fun getSomeComics(
@@ -45,7 +47,7 @@ fun getCharacterById(
         @Query("orderBy") orderBy: String? = null,
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
-    ): Single<MarvelCharacterWrapper>
+    ): Single<MarvelResponse>
 
     @GET("comics")
     fun searchComic(
@@ -54,5 +56,5 @@ fun getCharacterById(
         @Query("orderBy") orderBy: String? = "name",
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
-    ): Single<MarvelCharacterWrapper>
+    ): Single<MarvelResponse>
 }
