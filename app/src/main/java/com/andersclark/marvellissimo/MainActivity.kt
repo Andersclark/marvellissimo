@@ -3,11 +3,11 @@ package com.andersclark.marvellissimo
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import kotlinx.android.synthetic.main.activity_main.*
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
-import androidx.recyclerview.widget.RecyclerView
 
 class MainActivity : AppCompatActivity(){
 
