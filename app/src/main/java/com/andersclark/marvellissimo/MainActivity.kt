@@ -5,103 +5,16 @@ import android.util.Log
 import android.widget.RadioGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.andersclark.marvellissimo.entities.MarvelEntity
+import com.andersclark.marvellissimo.services.MarvelClient
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(){
-
-    lateinit var group : RadioGroup
-
-    private val charArray = arrayOf(
-        MarvelCharacter(
-            "itemId",
-            "Spiderman",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Superman",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "The Hulk",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Raccoon guy",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Groot",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Flash",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Mr. Fantastic",
-            "Here's a short description of this character",
-            "resourceURI"
-        )
+    val searchResults = mutableListOf<MarvelEntity>(
     )
-
-    private val comicArray = arrayOf(
-        MarvelCharacter(
-            "itemId",
-            "Spooderman",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Sooperman",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "The Hoolk",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Raccoon goouy",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Grooooot",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Floosh",
-            "Here's a short description of this character",
-            "resourceURI"
-        ),
-        MarvelCharacter(
-            "itemId",
-            "Mr. Foontoostooooooc",
-            "Here's a short description of this character",
-            "resourceURI"
-        )
-    )
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -110,7 +23,21 @@ class MainActivity : AppCompatActivity(){
         checkRadioButtons()
     }
 
-    private fun createRecyclerView(testArray: Array<MarvelCharacter>) {
+    var marvelData =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { result, err ->
+            if (err?.message != null)
+                Log.d(TAG, "GET-FAIL: " + err.message)
+            else {
+                Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                searchResults.addAll(result.data.results)
+            }
+        }
+    private val chracterList = mutableListOf<MarvelEntity>(
+    )
+
+    private fun createRecyclerView() {
         val layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
 
