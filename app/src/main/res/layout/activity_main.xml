@@ -11,6 +11,7 @@
         android:id="@+id/radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="48dp"
         android:orientation='horizontal'
         app:layout_constraintBottom_toTopOf="@+id/recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
@@ -18,12 +19,12 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
-            android:id="@+id/radioBtnHeroes"
+            android:id="@+id/radioBtnCharacters"
             android:layout_width="180dp"
             android:layout_height="55dp"
             android:layout_weight="1"
             android:checked="true"
-            android:text="@string/heroes" />
+            android:text="@string/characters" />
 
         <RadioButton
             android:id="@+id/radioBtnComics"
@@ -31,12 +32,19 @@
             android:layout_height="55dp"
             android:layout_weight="1"
             android:text="@string/comics" />
+
+        <RadioButton
+            android:id="@+id/radioBtnFavorites"
+            android:layout_width="180dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="@string/favorites"/>
     </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view"
-        android:layout_width="384dp"
-        android:layout_height="375dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -46,10 +54,8 @@
     <SearchView
         android:layout_width="409dp"
         android:layout_height="56dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginTop="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_marginBottom="48dp"
+        android:background="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
