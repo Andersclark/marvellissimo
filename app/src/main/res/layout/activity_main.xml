@@ -6,12 +6,43 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/button_showDetails"
-        android:layout_width="wrap_content"
+    <RadioGroup
+        android:id="@+id/radio_group"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="show details!"
-        tools:layout_editor_absoluteX="189dp"
-        tools:layout_editor_absoluteY="294dp" />
+        android:layout_marginTop="8dp"
+        android:orientation='horizontal'
+        app:layout_constraintBottom_toTopOf="@+id/recycler_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RadioButton
+            android:id="@+id/radioBtnHeroes"
+            android:layout_width="180dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:checked="true"
+            android:text="@string/heroes" />
+
+        <RadioButton
+            android:id="@+id/radioBtnComics"
+            android:layout_width="180dp"
+            android:layout_height="55dp"
+            android:layout_weight="1"
+            android:text="@string/comics" />
+    </RadioGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="406dp"
+        android:layout_height="572dp"
+        android:layout_marginTop="11dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/radio_group" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+
