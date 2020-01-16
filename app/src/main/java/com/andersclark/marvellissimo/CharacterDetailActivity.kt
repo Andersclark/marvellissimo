@@ -10,9 +10,15 @@ class CharacterDetailActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_details)
 
-        button_backToMain.setOnClickListener {
+        backToMain.setOnClickListener {
             finish()
         }
+
+        val character: MarvelCharacter = intent.getSerializableExtra("character") as MarvelCharacter
+        nameTitle.text = character.name
+        description.text=character.description
+        //and later add image ref too
+
     }
 
 }

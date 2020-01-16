@@ -1,11 +1,11 @@
 package com.andersclark.marvellissimo
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-import kotlinx.android.synthetic.main.activity_main.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener{
 
@@ -25,12 +25,10 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener{
     }
 
     override fun onCharacterItemClicked(character: MarvelCharacter) {
-        Toast.makeText(
-            this,
-            "${character.name} ",
-            Toast.LENGTH_SHORT
-        ).show()
+        val intent = Intent(this, CharacterDetailActivity::class.java)
+        intent.putExtra("character", character)
+        startActivity(intent)
     }
-    
+
 }
 
