@@ -1,28 +1,27 @@
 package com.andersclark.marvellissimo
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    private val names = arrayOf("Guy 1", "Guy 2", "Guy 3", "Guy 4","Guy 1", "Guy 2", "Guy 3", "Guy 4")
-
-    private val descriptions = arrayOf("Guy one details", "Guy two details",
-        "Guy three details", "Guy four details","Guy one details", "Guy two details",
-        "Guy three details", "Guy four details")
-
     private val thumbnails = intArrayOf(R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3,
         R.drawable.android_image_4, R.drawable.android_image_1,
-        R.drawable.android_image_2, R.drawable.android_image_3,
-        R.drawable.android_image_4)
+        R.drawable.android_image_2, R.drawable.android_image_3)
+
+    private val testChar = arrayOf(MarvelCharacter("itemId", "Spiderman", "Here's a short description of this character", "resourceURI"),
+        MarvelCharacter("itemId", "Superman", "Here's a short description of this character", "resourceURI"),
+        MarvelCharacter("itemId", "The Hulk", "Here's a short description of this character", "resourceURI"),
+        MarvelCharacter("itemId", "Raccoon guy", "Here's a short description of this character", "resourceURI"),
+        MarvelCharacter("itemId", "Groot", "Here's a short description of this character", "resourceURI"),
+        MarvelCharacter("itemId", "Flash", "Here's a short description of this character", "resourceURI"),
+        MarvelCharacter("itemId", "Mr. Fantastic", "Here's a short description of this character", "resourceURI"))
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -36,7 +35,7 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
             itemDescription = itemView.findViewById(R.id.description)
 
             itemView.setOnClickListener { v: View  ->
-                var position: Int = getAdapterPosition()
+                var position: Int = adapterPosition
 
                 Snackbar.make(v, "Clicked guy at position $position",
                     Snackbar.LENGTH_LONG).setAction("Action", null).show()
@@ -51,12 +50,13 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return names.size
+        return testChar.size
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.itemName.text = names[i]
-        viewHolder.itemDescription.text = descriptions[i]
+        viewHolder.itemName.text = testChar[i].name
+        viewHolder.itemDescription.text = testChar[i].description
+        //change to char array eventually
         viewHolder.itemThumbnail.setImageResource(thumbnails[i])
     }
 }
