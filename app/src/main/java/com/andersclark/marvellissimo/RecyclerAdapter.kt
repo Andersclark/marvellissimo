@@ -6,11 +6,12 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.google.android.material.snackbar.Snackbar
 
 private const val TAG = "RecyclerAdapter"
 
-class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(private val searchResults: List<MarvelEntity>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     // TODO: Remove dummy-data
     private val thumbnails = intArrayOf(R.drawable.android_image_1,

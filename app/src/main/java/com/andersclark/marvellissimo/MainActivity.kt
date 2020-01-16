@@ -12,12 +12,12 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(){
-    val searchResults = mutableListOf<MarvelEntity>(
+    private val searchResults = mutableListOf<MarvelEntity>(
     )
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        createRecyclerView()
+        createRecyclerView(searchResults)
     }
 
     var marvelData =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
@@ -31,14 +31,12 @@ class MainActivity : AppCompatActivity(){
                 searchResults.addAll(result.data.results)
             }
         }
-    private val chracterList = mutableListOf<MarvelEntity>(
-    )
 
-    private fun createRecyclerView() {
+    private fun createRecyclerView(searchResults: List<MarvelEntity>) {
         val layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
 
-        val adapter = RecyclerAdapter()
+        val adapter = RecyclerAdapter(searchResults)
         recycler_view.adapter = adapter
     }
 }
