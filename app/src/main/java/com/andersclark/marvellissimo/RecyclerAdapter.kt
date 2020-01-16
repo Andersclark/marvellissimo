@@ -6,13 +6,13 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.google.android.material.snackbar.Snackbar
 
 private const val TAG = "RecyclerAdapter"
 
-class RecyclerAdapter(checkRadioButtons: Array<MarvelCharacter>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(var searchResults: List<MarvelEntity>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    var testArray = checkRadioButtons
     private val thumbnails = intArrayOf(R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3,
         R.drawable.android_image_4, R.drawable.android_image_1,

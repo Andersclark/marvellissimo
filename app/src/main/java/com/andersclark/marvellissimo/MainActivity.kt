@@ -13,13 +13,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(){
-    val searchResults = mutableListOf<MarvelEntity>(
-    )
+
+    var searchResults = mutableListOf<MarvelEntity>()
+    private lateinit var group : RadioGroup
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        createRecyclerView(charArray)
+        createRecyclerView(searchResults)
         checkRadioButtons()
     }
 
@@ -34,27 +36,49 @@ class MainActivity : AppCompatActivity(){
                 searchResults.addAll(result.data.results)
             }
         }
-    private val chracterList = mutableListOf<MarvelEntity>(
-    )
 
-    private fun createRecyclerView() {
+    private fun createRecyclerView(searchResults: List<MarvelEntity>) {
         val layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
 
-        val adapter = RecyclerAdapter(testArray)
+        val adapter = RecyclerAdapter(searchResults)
         recycler_view.adapter = adapter
     }
 
     private fun checkRadioButtons() {
+        Log.d("RADIO", "here")
         group = radioGroup
-        var testArray : Array<MarvelCharacter> = charArray
 
         group.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { _, _ ->
             if(group.checkedRadioButtonId == 2131230881) {
-                createRecyclerView(charArray)
+                Log.d("RADIO", "1")
+                var marvelData =  MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = "b")
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result, err ->
+                        if (err?.message != null)
+                            Log.d(TAG, "GET-FAIL: " + err.message)
+                        else {
+                            Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                            searchResults.addAll(result.data.results)
+                        }
+                    }
+                createRecyclerView(searchResults)
             }
             else if(group.checkedRadioButtonId == 2131230882) {
-                createRecyclerView(comicArray)
+                Log.d("RADIO", "2")
+                var marvelData =  MarvelClient.marvelService.getSomeComics(limit = 10, nameStartsWith = "s")
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result, err ->
+                        if (err?.message != null)
+                            Log.d(TAG, "GET-FAIL: " + err.message)
+                        else {
+                            Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                            searchResults.addAll(result.data.results)
+                        }
+                    }
+                createRecyclerView(searchResults)
             }
             else if(group.checkedRadioButtonId == 2131230883) {
                 //add code for favorites, when they exist later on
