@@ -12,13 +12,13 @@ import com.google.android.material.snackbar.Snackbar
 
 class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    private val titles = arrayOf("Guy 1", "Guy 2", "Guy 3", "Guy 4","Guy 1", "Guy 2", "Guy 3", "Guy 4")
+    private val names = arrayOf("Guy 1", "Guy 2", "Guy 3", "Guy 4","Guy 1", "Guy 2", "Guy 3", "Guy 4")
 
-    private val details = arrayOf("Guy one details", "Guy two details",
+    private val descriptions = arrayOf("Guy one details", "Guy two details",
         "Guy three details", "Guy four details","Guy one details", "Guy two details",
         "Guy three details", "Guy four details")
 
-    private val images = intArrayOf(R.drawable.android_image_1,
+    private val thumbnails = intArrayOf(R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3,
         R.drawable.android_image_4, R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3,
@@ -26,14 +26,14 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
-        var itemImage: ImageView
-        var itemTitle: TextView
-        var itemDetail: TextView
+        var itemThumbnail: ImageView
+        var itemName: TextView
+        var itemDescription: TextView
 
         init {
-            itemImage = itemView.findViewById(R.id.item_image)
-            itemTitle = itemView.findViewById(R.id.item_title)
-            itemDetail = itemView.findViewById(R.id.item_detail)
+            itemThumbnail = itemView.findViewById(R.id.thumbnail)
+            itemName = itemView.findViewById(R.id.name)
+            itemDescription = itemView.findViewById(R.id.description)
 
             itemView.setOnClickListener { v: View  ->
                 var position: Int = getAdapterPosition()
@@ -51,12 +51,12 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return titles.size
+        return names.size
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.itemTitle.text = titles[i]
-        viewHolder.itemDetail.text = details[i]
-        viewHolder.itemImage.setImageResource(images[i])
+        viewHolder.itemName.text = names[i]
+        viewHolder.itemDescription.text = descriptions[i]
+        viewHolder.itemThumbnail.setImageResource(thumbnails[i])
     }
 }
