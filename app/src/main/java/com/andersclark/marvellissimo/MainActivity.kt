@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
+private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(){
 
     lateinit var group : RadioGroup
@@ -135,4 +136,3 @@ class MainActivity : AppCompatActivity(){
     }
 
 }
-

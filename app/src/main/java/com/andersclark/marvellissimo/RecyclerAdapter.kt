@@ -1,12 +1,18 @@
 package com.andersclark.marvellissimo
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.andersclark.marvellissimo.entities.MarvelCharacter
+import com.andersclark.marvellissimo.services.MarvelClient
 import com.google.android.material.snackbar.Snackbar
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+private const val TAG = "RecyclerAdapter"
 
 class RecyclerAdapter(checkRadioButtons: Array<MarvelCharacter>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
@@ -16,6 +22,19 @@ class RecyclerAdapter(checkRadioButtons: Array<MarvelCharacter>) : RecyclerView.
         R.drawable.android_image_4, R.drawable.android_image_1,
         R.drawable.android_image_2, R.drawable.android_image_3)
 
+    private var results =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { result, err ->
+            if (err?.message != null)
+                Log.d(TAG, "GET-FAIL: " + err.message)
+            else {
+                Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                chracterList.addAll(result.data.results)
+            }
+        }
+    private val chracterList = mutableListOf<MarvelCharacter>(
+      )
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -44,13 +63,14 @@ class RecyclerAdapter(checkRadioButtons: Array<MarvelCharacter>) : RecyclerView.
     }
 
     override fun getItemCount(): Int {
-        return testArray.size
+        return chracterList.size
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.itemName.text = testArray[i].name
-        viewHolder.itemDescription.text = testArray[i].description
-        //change to char array eventually
+        viewHolder.itemName.text = chracterList[i].name
+        viewHolder.itemDescription.text = chracterList[i].description
+
+        // TODO: Get image from characterList[i].thumbnail.path"
         viewHolder.itemThumbnail.setImageResource(thumbnails[i])
     }
 }
