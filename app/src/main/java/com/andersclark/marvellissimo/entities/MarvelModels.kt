@@ -3,7 +3,7 @@ package com.andersclark.marvellissimo.entities
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class MarvelCharacterWrapper(
+data class MarvelResponse(
     @Expose
     @SerializedName("code")
     val code:String,
@@ -24,10 +24,10 @@ data class MarvelCharacterWrapper(
     val etag: String,
     @Expose
     @SerializedName("data")
-    val data: MarvelCharacterList
+    val data: MarvelResponseData
 )
 
-data class MarvelCharacterList(
+data class MarvelResponseData(
     @Expose
     @SerializedName("offset")
     val offset:String,
@@ -39,9 +39,9 @@ data class MarvelCharacterList(
     val count:String,
     @Expose
     @SerializedName("results")
-    val results: List<MarvelCharacter>)
+    val results: List<MarvelEntity>)
 
-data class MarvelCharacter(
+data class MarvelEntity(
     @Expose
     @SerializedName("id")
     val id: String,
@@ -49,17 +49,20 @@ data class MarvelCharacter(
     @SerializedName("name")
     val name: String,
     @Expose
+    @SerializedName("title")
+    val title: String,
+    @Expose
     @SerializedName("description")
     val description: String,
     @Expose
     @SerializedName("thumbnail")
-    val thumbnail: MarvelCharacterThumbnail,
+    val thumbnail: MarvelEntityThumbnail,
     @Expose
     @SerializedName("resourceURI")
     val resourceURI: String
 )
 
-data class MarvelCharacterThumbnail(
+data class MarvelEntityThumbnail(
     @Expose
     @SerializedName("path")
     val path: String,
