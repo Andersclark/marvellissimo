@@ -10,8 +10,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.andersclark.marvellissimo.services.MarvelClient
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_character_details.*
 
 private const val TAG = "RecyclerAdapter"
 
@@ -19,12 +21,6 @@ class RecyclerAdapter(var searchResults: List<MarvelEntity>, private val itemCli
 
 
     interface OnItemClickListener { fun onCharacterItemClicked(character: MarvelEntity)  }
-
-    // TODO: Remove dummy-data
-    private val thumbnails = intArrayOf(R.drawable.android_image_1,
-        R.drawable.android_image_2, R.drawable.android_image_3,
-        R.drawable.android_image_4, R.drawable.android_image_1,
-        R.drawable.android_image_2, R.drawable.android_image_3)
 
     private var results =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
         .subscribeOn(Schedulers.newThread())
@@ -34,10 +30,10 @@ class RecyclerAdapter(var searchResults: List<MarvelEntity>, private val itemCli
                 Log.d(TAG, "GET-FAIL: " + err.message)
             else {
                 Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-                chracterList.addAll(result.data.results)
+                characterList.addAll(result.data.results)
             }
         }
-    private val chracterList = mutableListOf<MarvelEntity>()
+    private val characterList = mutableListOf<MarvelEntity>()
 
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
@@ -49,8 +45,10 @@ class RecyclerAdapter(var searchResults: List<MarvelEntity>, private val itemCli
          fun bind(character: MarvelEntity) {
              itemName.text = character.name
              itemDescription.text = character.description
-             //change to char array eventually
-            // itemThumbnail.setImageResource(thumbnails[i])
+
+             val imagePath=character.thumbnail.path+"/portrait_medium."+character.thumbnail.extension
+             val safeImagePath=imagePath.replace("http", "https")
+             Picasso.get().load(safeImagePath).into(itemThumbnail)
 
              itemView.setOnClickListener {
                  itemClickListener.onCharacterItemClicked(character)
