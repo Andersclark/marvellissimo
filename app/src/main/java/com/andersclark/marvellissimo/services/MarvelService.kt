@@ -41,9 +41,9 @@ fun getCharacterById(
     ): Single<MarvelResponse>
 
     @GET("comics")
-    fun getSomeComics(
-        @Query("nameStartsWith") nameStartsWith: String? = null,
-        @Query("name") byExactName: String? = null,
+    fun getComics(
+        @Query("nameStartsWith") titleStartsWith: String? = null,
+        @Query("title") byExactTitle: String? = null,
         @Query("orderBy") orderBy: String? = null,
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
@@ -51,8 +51,8 @@ fun getCharacterById(
 
     @GET("comics")
     fun searchComic(
-        @Query("nameStartsWith") nameStartsWith: String? = null,
-        @Query("name") byExactName: String? = null,
+        @Query("titleStartsWith") titleStartsWith: String? = null,
+        @Query("title") byExactTitle: String? = null,
         @Query("orderBy") orderBy: String? = "name",
         @Query("limit") limit: Int? = null,
         @Query("offset") offset: Int? = null
