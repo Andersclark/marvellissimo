@@ -49,7 +49,10 @@ class RecyclerAdapter(var searchResults: List<MarvelEntity>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.itemName.text = searchResults[i].name
+        viewHolder.itemName.text = searchResults[i].title
+        if(searchResults[i].name != null) {
+            viewHolder.itemName.text = searchResults[i].name
+        } else viewHolder.itemName.text = searchResults[i].title
         viewHolder.itemDescription.text = searchResults[i].description
 
         // TODO: Get image from characterList[i].thumbnail.path"
