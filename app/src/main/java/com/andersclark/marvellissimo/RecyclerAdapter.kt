@@ -43,7 +43,10 @@ class RecyclerAdapter(var searchResults: List<MarvelEntity>, private val itemCli
         var itemDescription: TextView=itemView.findViewById(R.id.description)
 
          fun bind(character: MarvelEntity) {
-             itemName.text = character.name
+             if(character.name != null) {
+                 itemName.text = character.name
+             } else itemName.text = character.title
+
              itemDescription.text = character.description
 
              val imagePath=character.thumbnail.path+"/portrait_medium."+character.thumbnail.extension

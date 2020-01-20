@@ -16,17 +16,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener{
 
+    lateinit var adapter: RecyclerAdapter
     var searchResults = mutableListOf<MarvelEntity>()
     private lateinit var group : RadioGroup
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        createRecyclerView(searchResults)
-        checkRadioButtons()
-    }
-
     var marvelData =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
         .subscribeOn(Schedulers.newThread())
         .observeOn(AndroidSchedulers.mainThread())
@@ -36,14 +28,23 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener{
             else {
                 Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
                 searchResults.addAll(result.data.results)
+                adapter.notifyDataSetChanged()
             }
         }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_main)
+
+        createRecyclerView(searchResults)
+        checkRadioButtons()
+    }
 
     private fun createRecyclerView(searchResults: List<MarvelEntity>) {
         val layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
 
-        val adapter = RecyclerAdapter(searchResults, this)
+        adapter = RecyclerAdapter(searchResults, this)
         recycler_view.adapter = adapter
     }
 
@@ -55,13 +56,12 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener{
 
 
     private fun checkRadioButtons() {
-        Log.d("RADIO", "here")
         group = radioGroup
 
         group.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { _, _ ->
             if(group.checkedRadioButtonId == 2131230881) {
                 Log.d("RADIO", "1")
-                var marvelData =  MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = "b")
+                marvelData = MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "b")
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { result, err ->
@@ -69,14 +69,15 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener{
                             Log.d(TAG, "GET-FAIL: " + err.message)
                         else {
                             Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                            searchResults.clear()
                             searchResults.addAll(result.data.results)
+                            adapter.notifyDataSetChanged()
                         }
                     }
-                createRecyclerView(searchResults)
             }
             else if(group.checkedRadioButtonId == 2131230882) {
                 Log.d("RADIO", "2")
-                var marvelData =  MarvelClient.marvelService.getComics(limit = 10)
+                marvelData = MarvelClient.marvelService.getComics(limit = 7, titleStartsWith = "m")
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { result, err ->
@@ -84,10 +85,11 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener{
                             Log.d(TAG, "GET-FAIL: " + err.message)
                         else {
                             Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                            searchResults.clear()
                             searchResults.addAll(result.data.results)
+                            adapter.notifyDataSetChanged()
                         }
                     }
-                createRecyclerView(searchResults)
             }
             else if(group.checkedRadioButtonId == 2131230883) {
                 //add code for favorites, when they exist later on
