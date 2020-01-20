@@ -7,18 +7,18 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.andersclark.marvellissimo.entities.MarvelCharacter
+import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.andersclark.marvellissimo.services.MarvelClient
 import com.google.android.material.snackbar.Snackbar
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+
 private const val TAG = "RecyclerAdapter"
 
-class RecyclerAdapter (
-   private val itemClickListener: OnItemClickListener
-): RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(var searchResults: List<MarvelEntity>, private val itemClickListener: RecyclerAdapter.OnItemClickListener) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    interface OnItemClickListener { fun onCharacterItemClicked(character: MarvelCharacter)  }
+
+    interface OnItemClickListener { fun onCharacterItemClicked(character: MarvelEntity)  }
 
     // TODO: Remove dummy-data
     private val thumbnails = intArrayOf(R.drawable.android_image_1,
@@ -37,8 +37,7 @@ class RecyclerAdapter (
                 chracterList.addAll(result.data.results)
             }
         }
-    private val chracterList = mutableListOf<MarvelCharacter>(
-      )
+    private val chracterList = mutableListOf<MarvelEntity>()
 
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {
@@ -47,7 +46,7 @@ class RecyclerAdapter (
         var itemName: TextView= itemView.findViewById(R.id.name)
         var itemDescription: TextView=itemView.findViewById(R.id.description)
 
-         fun bind(character: MarvelCharacter) {
+         fun bind(character: MarvelEntity) {
              itemName.text = character.name
              itemDescription.text = character.description
              //change to char array eventually
@@ -66,10 +65,10 @@ class RecyclerAdapter (
     }
 
     override fun getItemCount(): Int {
-        return chracterList.size
+        return searchResults.size
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.bind(testChar[i])
+        viewHolder.bind(searchResults[i])
     }
 }
