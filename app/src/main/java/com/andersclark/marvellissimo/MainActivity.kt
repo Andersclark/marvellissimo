@@ -26,6 +26,7 @@ class MainActivity() : AppCompatActivity(){
             else {
                 Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
                 searchResults.addAll(result.data.results)
+                adapter.notifyDataSetChanged()
             }
         }
 
@@ -67,7 +68,7 @@ class MainActivity() : AppCompatActivity(){
             }
             else if(group.checkedRadioButtonId == 2131230882) {
                 Log.d("RADIO", "2")
-                marvelData = MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "t")
+                marvelData = MarvelClient.marvelService.getComics(limit = 7, titleStartsWith = "m")
                     .subscribeOn(Schedulers.newThread())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe { result, err ->
