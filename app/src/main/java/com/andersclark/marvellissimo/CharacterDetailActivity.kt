@@ -22,14 +22,12 @@ class CharacterDetailActivity: AppCompatActivity() {
         description.text=character.description
         //and later add image ref too
 
+        val imagePath=character.thumbnail.path+"/portrait_xlarge."+character.thumbnail.extension
+        val safeImagePath=imagePath.replace("http", "https")
+        Picasso.get().load(safeImagePath).into(characterImage)
 
 
-        Picasso.get()
-            .load("https://cdn.pixabay.com/photo/2016/11/09/16/24/virus-1812092_1280.jpg")
-            .resize(250, 250)
-            .centerCrop()
-            .placeholder(R.drawable.android_image_1)
-            .into(characterImage)
+
 
     }
 
