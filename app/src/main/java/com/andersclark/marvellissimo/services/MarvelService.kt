@@ -42,7 +42,7 @@ fun getCharacterById(
 
     @GET("comics")
     fun getComics(
-        @Query("nameStartsWith") titleStartsWith: String? = null,
+        @Query("titleStartsWith") titleStartsWith: String? = null,
         @Query("title") byExactTitle: String? = null,
         @Query("orderBy") orderBy: String? = null,
         @Query("limit") limit: Int? = null,

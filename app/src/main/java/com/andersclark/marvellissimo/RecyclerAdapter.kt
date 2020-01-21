@@ -1,5 +1,6 @@
 package com.andersclark.marvellissimo
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,35 +8,55 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.andersclark.marvellissimo.entities.MarvelEntity
+import com.andersclark.marvellissimo.services.MarvelClient
 import com.google.android.material.snackbar.Snackbar
+import com.squareup.picasso.Picasso
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
+import kotlinx.android.synthetic.main.activity_character_details.*
 
 private const val TAG = "RecyclerAdapter"
 
-class RecyclerAdapter(var searchResults: List<MarvelEntity>) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
+class RecyclerAdapter(var searchResults: List<MarvelEntity>, private val itemClickListener: RecyclerAdapter.OnItemClickListener) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
 
-    private val thumbnails = intArrayOf(R.drawable.android_image_1,
-        R.drawable.android_image_2, R.drawable.android_image_3,
-        R.drawable.android_image_4, R.drawable.android_image_1,
-        R.drawable.android_image_2, R.drawable.android_image_3)
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    interface OnItemClickListener { fun onCharacterItemClicked(character: MarvelEntity)  }
 
-        var itemThumbnail: ImageView
-        var itemName: TextView
-        var itemDescription: TextView
-
-        init {
-            itemThumbnail = itemView.findViewById(R.id.thumbnail)
-            itemName = itemView.findViewById(R.id.name)
-            itemDescription = itemView.findViewById(R.id.description)
-
-            itemView.setOnClickListener { v: View  ->
-                var position: Int = adapterPosition
-
-                Snackbar.make(v, "Clicked guy at position $position",
-                    Snackbar.LENGTH_LONG).setAction("Action", null).show()
+    private var results =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
+        .subscribeOn(Schedulers.newThread())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe { result, err ->
+            if (err?.message != null)
+                Log.d(TAG, "GET-FAIL: " + err.message)
+            else {
+                Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                characterList.addAll(result.data.results)
             }
         }
+    private val characterList = mutableListOf<MarvelEntity>()
+
+    inner class ViewHolder(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
+
+        var itemThumbnail: ImageView = itemView.findViewById(R.id.thumbnail)
+        var itemName: TextView= itemView.findViewById(R.id.name)
+        var itemDescription: TextView=itemView.findViewById(R.id.description)
+
+         fun bind(character: MarvelEntity) {
+             if(character.name != null) {
+                 itemName.text = character.name
+             } else itemName.text = character.title
+
+             itemDescription.text = character.description
+
+             val imagePath=character.thumbnail.path+"/portrait_medium."+character.thumbnail.extension
+             val safeImagePath=imagePath.replace("http", "https")
+             Picasso.get().load(safeImagePath).into(itemThumbnail)
+
+             itemView.setOnClickListener {
+                 itemClickListener.onCharacterItemClicked(character)
+             }
+         }
     }
 
     override fun onCreateViewHolder(viewGroup: ViewGroup, i: Int): ViewHolder {
@@ -49,10 +70,6 @@ class RecyclerAdapter(var searchResults: List<MarvelEntity>) : RecyclerView.Adap
     }
 
     override fun onBindViewHolder(viewHolder: ViewHolder, i: Int) {
-        viewHolder.itemName.text = searchResults[i].name
-        viewHolder.itemDescription.text = searchResults[i].description
-
-        // TODO: Get image from characterList[i].thumbnail.path"
-        viewHolder.itemThumbnail.setImageResource(thumbnails[i])
+        viewHolder.bind(searchResults[i])
     }
 }
