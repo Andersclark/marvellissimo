@@ -14,7 +14,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
-private const val TAG = "MainActivity"
+private const val TAG = "MainActivity2"
 class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener{
 
     private lateinit var adapter: RecyclerAdapter
@@ -64,14 +64,14 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
     private fun checkRadioButtons() {
         group = radioGroup
 
-        group.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { _, _ ->
-            if(group.checkedRadioButtonId == 2131230881) {
+        group.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { a, b ->
+            if(group.checkedRadioButtonId == radioBtnCharacters.id) {
                 getMarvelCharacter()
             }
-            else if(group.checkedRadioButtonId == 2131230882) {
+            else if(group.checkedRadioButtonId == radioBtnComics.id) {
                 getMarvelComic()
             }
-            else if(group.checkedRadioButtonId == 2131230883) {
+            else if(group.checkedRadioButtonId == radioBtnFavorites.id) {
                 //add code for favorites, when they exist later on
             }
         })
@@ -80,10 +80,10 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
     override fun onQueryTextSubmit(query: String): Boolean {
         Log.d("SEARCH", "searched for $query")
         searchQuery = query
-        if(group.checkedRadioButtonId == 2131230881) {
+        if(group.checkedRadioButtonId == radioBtnCharacters.id) {
             getMarvelCharacter()
         }
-        else if(group.checkedRadioButtonId == 2131230882) {
+        else if(group.checkedRadioButtonId == radioBtnFavorites.id) {
             getMarvelComic()
         }
         return false
