@@ -15,8 +15,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity"
-class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener{
-class MainActivity() : AppCompatActivity(), SearchView.OnQueryTextListener {
+class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener{
 
     private lateinit var adapter: RecyclerAdapter
     var searchResults = mutableListOf<MarvelEntity>()
