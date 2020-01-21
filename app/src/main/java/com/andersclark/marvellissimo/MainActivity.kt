@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.andersclark.marvellissimo.services.MarvelClient
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -39,21 +40,14 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        verifyUserIsLoggedIn()
+
         editSearch = findViewById(R.id.search_bar)
         editSearch!!.setOnQueryTextListener(this)
 
         createRecyclerView(searchResults)
         checkRadioButtons()
     }
-    private fun verifyUserIsLoggedIn() {
-        val uid = FirebaseAuth.getInstance().uid
-        if(uid == null){
-            val intent = Intent(this, LoginActivity::class.java)
-            intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK.or(Intent.FLAG_ACTIVITY_NEW_TASK)
-            startActivity(intent)
-        }
-    }
+
     private fun createRecyclerView(searchResults: List<MarvelEntity>) {
         val layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
