@@ -2,6 +2,7 @@ package com.andersclark.marvellissimo.entities
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class MarvelResponse(
     @Expose
@@ -60,7 +61,7 @@ data class MarvelEntity(
     @Expose
     @SerializedName("resourceURI")
     val resourceURI: String
-)
+):Serializable
 
 data class MarvelEntityThumbnail(
     @Expose
@@ -68,7 +69,7 @@ data class MarvelEntityThumbnail(
     val path: String,
     @Expose
     @SerializedName("extension")
-    val extension: String)
+    val extension: String):Serializable
 
 
 
