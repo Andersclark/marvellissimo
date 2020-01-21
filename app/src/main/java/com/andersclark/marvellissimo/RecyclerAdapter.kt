@@ -1,6 +1,5 @@
 package com.andersclark.marvellissimo
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,32 +7,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.andersclark.marvellissimo.entities.MarvelEntity
-import com.andersclark.marvellissimo.services.MarvelClient
-import com.google.android.material.snackbar.Snackbar
 import com.squareup.picasso.Picasso
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.activity_character_details.*
 
 private const val TAG = "RecyclerAdapter"
 
-class RecyclerAdapter(var searchResults: List<MarvelEntity>, private val itemClickListener: RecyclerAdapter.OnItemClickListener) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
-
-
+class RecyclerAdapter(private var searchResults: List<MarvelEntity>, private val itemClickListener: OnItemClickListener) : RecyclerView.Adapter<RecyclerAdapter.ViewHolder>() {
     interface OnItemClickListener { fun onCharacterItemClicked(character: MarvelEntity)  }
-
-    private var results =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
-        .subscribeOn(Schedulers.newThread())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe { result, err ->
-            if (err?.message != null)
-                Log.d(TAG, "GET-FAIL: " + err.message)
-            else {
-                Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-                characterList.addAll(result.data.results)
-            }
-        }
-    private val characterList = mutableListOf<MarvelEntity>()
 
     inner class ViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView) {

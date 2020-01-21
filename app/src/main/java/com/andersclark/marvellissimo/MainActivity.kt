@@ -4,14 +4,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.RadioGroup
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.andersclark.marvellissimo.services.MarvelClient
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -20,9 +17,9 @@ private const val TAG = "MainActivity2"
 class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener{
 
     private lateinit var adapter: RecyclerAdapter
-    var searchResults = mutableListOf<MarvelEntity>()
+    private var searchResults = mutableListOf<MarvelEntity>()
     private lateinit var group : RadioGroup
-    var marvelData =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
+    private var marvelData =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
     .subscribeOn(Schedulers.newThread())
     .observeOn(AndroidSchedulers.mainThread())
     .subscribe { result, err ->
@@ -34,7 +31,7 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
             adapter.notifyDataSetChanged()
         }
     }
-    private var searchQuery: String? = "re"
+    private var searchQuery: String? = "a"
     private var editSearch: SearchView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -62,19 +59,20 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
         startActivity(intent)
     }
 
-
     private fun checkRadioButtons() {
         group = radioGroup
 
-        group.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { a, b ->
-            if(group.checkedRadioButtonId == radioBtnCharacters.id) {
-                getMarvelCharacter()
-            }
-            else if(group.checkedRadioButtonId == radioBtnComics.id) {
-                getMarvelComic()
-            }
-            else if(group.checkedRadioButtonId == radioBtnFavorites.id) {
-                //add code for favorites, when they exist later on
+        group.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { _, _ ->
+            when (group.checkedRadioButtonId) {
+                radioBtnCharacters.id -> {
+                    getMarvelCharacter()
+                }
+                radioBtnComics.id -> {
+                    getMarvelComic()
+                }
+                radioBtnFavorites.id -> {
+                    //add code for favorites, when they exist later on
+                }
             }
         })
     }
@@ -96,8 +94,8 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
         return false
     }
 
-    fun getMarvelCharacter() {
-        marvelData = MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = searchQuery)
+    private fun getMarvelCharacter() {
+        marvelData = MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = searchQuery)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { result, err ->
@@ -112,8 +110,8 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
             }
     }
 
-    fun getMarvelComic() {
-        marvelData = MarvelClient.marvelService.getComics(limit = 7, titleStartsWith = searchQuery)
+    private fun getMarvelComic() {
+        marvelData = MarvelClient.marvelService.getComics(limit = 10, titleStartsWith = searchQuery)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { result, err ->
@@ -127,5 +125,4 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
                 }
             }
     }
-
 }
