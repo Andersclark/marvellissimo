@@ -4,8 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.RadioGroup
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andersclark.marvellissimo.entities.MarvelEntity
@@ -15,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
 private const val TAG = "MainActivity2"
-class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener{
+class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener, MenuActivity(){
 
     private lateinit var adapter: RecyclerAdapter
     var searchResults = mutableListOf<MarvelEntity>()

@@ -8,7 +8,7 @@ import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_character_details.*
 
-class CharacterDetailActivity: AppCompatActivity() {
+class CharacterDetailActivity: MenuActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
