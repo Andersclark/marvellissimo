@@ -13,16 +13,16 @@ class CharacterDetailActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_character_details)
 
-        backToMain.setOnClickListener {
+        val marvelEntity: MarvelEntity = intent.getSerializableExtra("marvelEntity") as MarvelEntity
             finish()
         }
 
-        val character: MarvelEntity = intent.getSerializableExtra("character") as MarvelEntity
-        nameTitle.text = character.name
-        description.text=character.description
+        nameTitle.text = if(marvelEntity.name == null) marvelEntity.title else marvelEntity.name
+        goToBtn.text= if(marvelEntity.name == null)"Learn more about this comic on marvels webpage" else "Learn more about this character on marvels webpage"
+        description.text=marvelEntity.description
         //and later add image ref too
 
-        val imagePath=character.thumbnail.path+"/portrait_xlarge."+character.thumbnail.extension
+        val imagePath=marvelEntity.thumbnail.path+"/portrait_xlarge."+marvelEntity.thumbnail.extension
         val safeImagePath=imagePath.replace("http", "https")
         Picasso.get().load(safeImagePath).into(characterImage)
 

@@ -56,7 +56,7 @@ class MainActivity : AppCompatActivity(), RecyclerAdapter.OnItemClickListener, S
 
     override fun onCharacterItemClicked(character: MarvelEntity) {
         val intent = Intent(this, CharacterDetailActivity::class.java)
-        intent.putExtra("character", character)
+        intent.putExtra("marvelEntity", character)
         startActivity(intent)
     }
 
