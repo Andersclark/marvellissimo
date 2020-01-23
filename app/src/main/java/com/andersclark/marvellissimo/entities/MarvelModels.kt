@@ -60,8 +60,20 @@ data class MarvelEntity(
     val thumbnail: MarvelEntityThumbnail,
     @Expose
     @SerializedName("resourceURI")
-    val resourceURI: String
-):Serializable
+    val resourceURI: String,
+    @Expose
+    @SerializedName("urls")
+    val urls: List<UrlEntity>)
+    :Serializable
+
+data class UrlEntity(
+    @Expose
+    @SerializedName("type")
+    val type: String,
+    @Expose
+    @SerializedName("url")
+    val url: String)
+    :Serializable
 
 data class MarvelEntityThumbnail(
     @Expose
