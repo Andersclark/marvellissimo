@@ -32,12 +32,13 @@
             android:layout_weight="1"
             android:text="@string/comics" />
 
-        <RadioButton
-            android:id="@+id/radioBtnFavorites"
+        <Switch
+            android:id="@+id/favoritesSwitch"
             android:layout_width="180dp"
             android:layout_height="55dp"
             android:layout_weight="1"
             android:text="@string/favorites" />
+
     </RadioGroup>
 
     <androidx.recyclerview.widget.RecyclerView

@@ -69,7 +69,7 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
                 radioBtnComics.id -> {
                     getMarvelComic()
                 }
-                radioBtnFavorites.id -> {
+                favoritesSwitch.id -> {
                     //add code for favorites, when they exist later on
                 }
             }
@@ -82,7 +82,7 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
         if(group.checkedRadioButtonId == radioBtnCharacters.id) {
             getMarvelCharacter()
         }
-        else if(group.checkedRadioButtonId == radioBtnFavorites.id) {
+        else if(group.checkedRadioButtonId == favoritesSwitch.id) {
             getMarvelComic()
         }
         return false
