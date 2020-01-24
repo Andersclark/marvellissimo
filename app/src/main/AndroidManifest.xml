@@ -26,6 +26,14 @@
             android:name=".CharacterDetailActivity"
             android:parentActivityName=".MainActivity"
             ></activity>
+        <activity
+            android:name=".MenuActivity"
+            android:parentActivityName=".MainActivity"
+            ></activity>
+        <activity
+            android:name=".AboutActivity"
+            android:parentActivityName=".MainActivity"
+            ></activity>
     </application>
 
 </manifest>
