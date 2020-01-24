@@ -42,6 +42,7 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
 
         createRecyclerView(searchResults)
         checkRadioButtons()
+        getFavorites()
     }
 
     private fun createRecyclerView(searchResults: List<MarvelEntity>) {
@@ -61,7 +62,7 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
     private fun checkRadioButtons() {
         group = radioGroup
 
-        group.setOnCheckedChangeListener(RadioGroup.OnCheckedChangeListener { _, _ ->
+        group.setOnCheckedChangeListener { _, _ ->
             when (group.checkedRadioButtonId) {
                 radioBtnCharacters.id -> {
                     getMarvelCharacter()
@@ -69,11 +70,8 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
                 radioBtnComics.id -> {
                     getMarvelComic()
                 }
-                favoritesSwitch.id -> {
-                    //add code for favorites, when they exist later on
-                }
             }
-        })
+        }
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
@@ -82,13 +80,14 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
         if(group.checkedRadioButtonId == radioBtnCharacters.id) {
             getMarvelCharacter()
         }
-        else if(group.checkedRadioButtonId == favoritesSwitch.id) {
+        else if(group.checkedRadioButtonId == radioBtnComics.id) {
             getMarvelComic()
         }
         return false
     }
 
     override fun onQueryTextChange(newText: String): Boolean {
+        //for eventual filtering purposes - reacts on each keystroke
         Log.d("SEARCH", "searching for $newText")
         return false
     }
@@ -123,5 +122,12 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
                     adapter.notifyDataSetChanged()
                 }
             }
+    }
+
+    private fun getFavorites() {
+        favoritesSwitch.setOnCheckedChangeListener { _, _ ->
+            if(favoritesSwitch.isChecked) Log.d("FAVE", "switch on")
+            else Log.d("FAVE", "switch off")
+        }
     }
 }

@@ -7,37 +7,39 @@
     tools:context=".MainActivity"
     tools:layout_editor_absoluteY="81dp">
 
-    <RadioGroup
-        android:id="@+id/radioGroup"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation='horizontal'
+    <Switch
+        android:id="@+id/favoritesSwitch"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
+        android:text="@string/favorites"
         app:layout_constraintBottom_toTopOf="@+id/recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/radioGroup"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:orientation='horizontal'
+        app:layout_constraintBottom_toTopOf="@+id/recycler_view"
+        app:layout_constraintEnd_toStartOf="@+id/favoritesSwitch"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <RadioButton
             android:id="@+id/radioBtnCharacters"
-            android:layout_width="180dp"
-            android:layout_height="55dp"
-            android:layout_weight="1"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
             android:checked="true"
             android:text="@string/characters" />
 
         <RadioButton
             android:id="@+id/radioBtnComics"
-            android:layout_width="180dp"
-            android:layout_height="55dp"
-            android:layout_weight="1"
+            android:layout_width="120dp"
+            android:layout_height="50dp"
             android:text="@string/comics" />
-
-        <Switch
-            android:id="@+id/favoritesSwitch"
-            android:layout_width="180dp"
-            android:layout_height="55dp"
-            android:layout_weight="1"
-            android:text="@string/favorites" />
 
     </RadioGroup>
 
