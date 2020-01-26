@@ -5,14 +5,15 @@ import android.content.Intent
 import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import io.realm.Realm
 
 private const val TAG = "MyApplication"
 class MyApplication: Application() {
     override fun onCreate() {
         super.onCreate()
+        Realm.init(this)
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
         verifyUserIsLoggedIn()
-        Log.d(TAG, "I got launched!")
     }
     private fun verifyUserIsLoggedIn() {
         val uid = FirebaseAuth.getInstance().uid

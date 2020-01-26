@@ -2,6 +2,9 @@ package com.andersclark.marvellissimo.entities
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmObject
+import io.realm.annotations.Ignore
+import io.realm.annotations.PrimaryKey
 import java.io.Serializable
 
 data class MarvelResponse(
@@ -42,46 +45,49 @@ data class MarvelResponseData(
     @SerializedName("results")
     val results: List<MarvelEntity>)
 
-data class MarvelEntity(
+open class MarvelEntity(
     @Expose
     @SerializedName("id")
-    val id: String,
+    @PrimaryKey
+    var id: String = "",
     @Expose
     @SerializedName("name")
-    val name: String,
+    var name: String = "",
     @Expose
     @SerializedName("title")
-    val title: String,
+    var title: String = "",
     @Expose
     @SerializedName("description")
-    val description: String,
+    var description: String = "",
     @Expose
     @SerializedName("thumbnail")
-    val thumbnail: MarvelEntityThumbnail,
+    @Ignore // TODO: Implement nested class: MarvelEntityThumbnal
+    var thumbnail: MarvelEntityThumbnail = MarvelEntityThumbnail("", ""),
     @Expose
     @SerializedName("resourceURI")
-    val resourceURI: String,
+    var resourceURI: String = "",
     @Expose
     @SerializedName("urls")
-    val urls: List<UrlEntity>)
-    :Serializable
+    @Ignore  // TODO: Implement nested class
+    var urls: List<UrlEntity> = mutableListOf())
+    :Serializable, RealmObject()
 
-data class UrlEntity(
+open class UrlEntity(
     @Expose
     @SerializedName("type")
-    val type: String,
+    var type: String = "",
     @Expose
     @SerializedName("url")
-    val url: String)
-    :Serializable
+    var url: String = "")
+    :Serializable, RealmObject()
 
-data class MarvelEntityThumbnail(
+open class MarvelEntityThumbnail(
     @Expose
     @SerializedName("path")
-    val path: String,
+    var path: String = "",
     @Expose
     @SerializedName("extension")
-    val extension: String):Serializable
+    var extension: String = ""):Serializable, RealmObject()
 
 
 
