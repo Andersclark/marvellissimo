@@ -11,7 +11,11 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.squareup.picasso.Picasso
+import io.realm.Realm
+import io.realm.RealmResults
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.card_layout.view.*
+
 
 private const val TAG = "RecyclerAdapter"
 
@@ -69,14 +73,33 @@ class RecyclerAdapter(
 
     private fun toggleFavorite(character: MarvelEntity, faveBtn: ImageButton) {
         Log.d("FAVE", "clicked fave: ${character.name}")
-        Log.d("FAVE", "Favorites size: ${userFavorites.size}")
-        if (!userFavorites.contains(character)) {
-            Log.d("FAVE", "adding favorite")
-            userFavorites.add(character)
-            faveBtn.setColorFilter(Color.YELLOW)
+
+        var flag = false
+        for(favorite in userFavorites){
+            if(favorite.id == character.id) {
+                flag = true
+                Log.d("FAVE", "Favorite already in favorites!")
+            }
+        }
+
+        if (flag) {
+            val realm = Realm.getDefaultInstance()
+            realm.executeTransaction { realm ->
+                val rows: RealmResults<MarvelEntity> =
+                    realm.where<MarvelEntity>().equalTo("id", character.id).findAll()
+                rows.deleteAllFromRealm()
+            }
+            Log.d("FAVE", "Favorites SHRUNK to: ${userFavorites.size}")
+            faveBtn.clearColorFilter()
+
         } else {
-            userFavorites.remove(character)
-            faveBtn.setColorFilter(Color.GRAY)
+            Log.d("FAVE", "adding favorite...")
+            val realm = Realm.getDefaultInstance()
+            realm.beginTransaction()
+            realm.insertOrUpdate(character)
+            realm.commitTransaction()
+            Log.d("FAVE", "Favorites GREW to: ${userFavorites.size}")
+            faveBtn.setColorFilter(Color.YELLOW)
         }
     }
 
