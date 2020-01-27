@@ -16,10 +16,8 @@ class CharacterDetailActivity: MenuActivity() {
 
         val marvelEntity: MarvelEntity = intent.getSerializableExtra("marvelEntity") as MarvelEntity
         goToBtn.setOnClickListener{goToUrl(marvelEntity.urls.get(0).url)}
-
-        nameTitle.text = if(marvelEntity.name == null) marvelEntity.title else marvelEntity.name
-        goToBtn.text= if(marvelEntity.name == null)"Learn more about this comic on marvels webpage" else "Learn more about this character on marvels webpage"
-        description.text=marvelEntity.description
+        nameTitle.text = if(marvelEntity.name.isEmpty()) {marvelEntity.title} else {marvelEntity.name}
+        description.text = marvelEntity.description
 
         val imagePath=marvelEntity.thumbnail.path+"/portrait_xlarge."+marvelEntity.thumbnail.extension
         val safeImagePath=imagePath.replace("http", "https")
