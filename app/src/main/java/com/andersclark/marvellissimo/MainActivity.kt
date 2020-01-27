@@ -59,18 +59,18 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
         checkRadioButtons()
         checkFavoriteSwitch()
 
-     /*   ref.addValueEventListener(object : ValueEventListener {
-            override fun onCancelled(p0: DatabaseError) {
-                Log.w("ACTIVE USER", p0.details)
-            }
+        /*   ref.addValueEventListener(object : ValueEventListener {
+               override fun onCancelled(p0: DatabaseError) {
+                   Log.w("ACTIVE USER", p0.details)
+               }
 
-            override fun onDataChange(p0: DataSnapshot) {
-                if (p0.exists()) {
-                    activeUser = p0.getValue(User::class.java)!!
-                    Log.d("ACTIVE USER", "active user is ${activeUser.username}")
-                }
-            }
-        })*/
+               override fun onDataChange(p0: DataSnapshot) {
+                   if (p0.exists()) {
+                       activeUser = p0.getValue(User::class.java)!!
+                       Log.d("ACTIVE USER", "active user is ${activeUser.username}")
+                   }
+               }
+           })*/
     }
 
     private fun createRecyclerView(searchResults: List<MarvelEntity>) {
@@ -89,7 +89,6 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
 
     private fun checkRadioButtons() {
         group = radioGroup
-
         group.setOnCheckedChangeListener { _, _ ->
             when (group.checkedRadioButtonId) {
                 radioBtnCharacters.id -> {
@@ -120,36 +119,55 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     }
 
     private fun getMarvelCharacter() {
-        marvelData =
-            MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = searchQuery)
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe { result, err ->
-                    if (err?.message != null)
-                        Log.d(TAG, "GET-FAIL: " + err.message)
-                    else {
-                        Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-                        searchResults.clear()
-                        searchResults.addAll(result.data.results)
-                        adapter.notifyDataSetChanged()
+        searchResults.clear()
+        if (!favoritesSwitch.isChecked) {
+            marvelData =
+                MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = searchQuery)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result, err ->
+                        if (err?.message != null)
+                            Log.d(TAG, "GET-FAIL: " + err.message)
+                        else {
+                            Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                            searchResults.addAll(result.data.results)
+                            adapter.notifyDataSetChanged()
+                        }
                     }
-                }
+        } else {
+            userFavorites.filter {
+                it.title.isEmpty()
+                searchResults.add(it)
+
+            }
+            adapter.notifyDataSetChanged()
+        }
     }
 
     private fun getMarvelComic() {
-        marvelData = MarvelClient.marvelService.getComics(limit = 10, titleStartsWith = searchQuery)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { result, err ->
-                if (err?.message != null)
-                    Log.d(TAG, "GET-FAIL: " + err.message)
-                else {
-                    Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-                    searchResults.clear()
-                    searchResults.addAll(result.data.results)
-                    adapter.notifyDataSetChanged()
-                }
+        searchResults.clear()
+        if (!favoritesSwitch.isChecked) {
+            marvelData =
+                MarvelClient.marvelService.getComics(limit = 10, titleStartsWith = searchQuery)
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe { result, err ->
+                        if (err?.message != null)
+                            Log.d(TAG, "GET-FAIL: " + err.message)
+                        else {
+                            Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                            searchResults.addAll(result.data.results)
+                            adapter.notifyDataSetChanged()
+
+                        }
+                    }
+        } else {
+            userFavorites.filter {
+                it.name.isEmpty()
+                searchResults.add(it)
             }
+            adapter.notifyDataSetChanged()
+        }
     }
 
     private fun getFavorites(): RealmResults<MarvelEntity> {
@@ -159,25 +177,11 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
 
     private fun checkFavoriteSwitch() {
         favoritesSwitch.setOnCheckedChangeListener { _, _ ->
-            searchResults.clear()
+            Log.d("FAVES", favoritesSwitch.isChecked.toString())
 
             if (favoritesSwitch.isChecked) {
-                if (group.checkedRadioButtonId == radioBtnCharacters.id) {
-                    Log.d("FAVES", "characters")
-                    userFavorites.filter {
-                        it.title.isEmpty()
-                        searchResults.add(it)
-                    }
-                } else {
-                    if (group.checkedRadioButtonId == radioBtnComics.id) {
-                        Log.d("FAVES", "comics")
-                        userFavorites.filter {
-                            it.name.isEmpty()
-                            searchResults.add(it)
-                        }
-                    }
-                }
-                adapter.notifyDataSetChanged()
+                if (group.checkedRadioButtonId == radioBtnCharacters.id) getMarvelCharacter()
+                else getMarvelComic()
             }
         }
     }
