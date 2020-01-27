@@ -136,9 +136,11 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
                     }
         } else {
             userFavorites.filter {
-                it.title.isEmpty()
-                searchResults.add(it)
-
+                var result: MarvelEntity = MarvelEntity()
+                if(it.name.isNotBlank()) {
+                    result = it
+                }
+                searchResults.add(result)
             }
             adapter.notifyDataSetChanged()
         }
@@ -158,13 +160,15 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
                             Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
                             searchResults.addAll(result.data.results)
                             adapter.notifyDataSetChanged()
-
                         }
                     }
         } else {
             userFavorites.filter {
-                it.name.isEmpty()
-                searchResults.add(it)
+                var result: MarvelEntity = MarvelEntity()
+                if(it.title.isNotBlank()) {
+                    result = it
+                }
+                searchResults.add(result)
             }
             adapter.notifyDataSetChanged()
         }
