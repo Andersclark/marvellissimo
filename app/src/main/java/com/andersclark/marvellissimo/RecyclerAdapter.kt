@@ -49,7 +49,7 @@ class RecyclerAdapter(var searchResults: List<MarvelEntity>, private val itemCli
 
              itemDescription.text = character.description
 
-             val imagePath=character.thumbnail.path+"/portrait_medium."+character.thumbnail.extension
+             val imagePath=character.thumbnail?.path+"/portrait_medium."+character.thumbnail?.extension
              val safeImagePath=imagePath.replace("http", "https")
              Picasso.get().load(safeImagePath).into(itemThumbnail)
 

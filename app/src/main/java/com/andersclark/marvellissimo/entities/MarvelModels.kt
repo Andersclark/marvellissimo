@@ -45,32 +45,30 @@ data class MarvelResponseData(
 data class MarvelEntity(
     @Expose
     @SerializedName("id")
-    val id: String,
+    val id: String = "",
     @Expose
     @SerializedName("name")
-    val name: String,
+    val name: String = "",
     @Expose
     @SerializedName("title")
-    val title: String,
+    val title: String = "",
     @Expose
     @SerializedName("description")
-    val description: String,
+    val description: String = "",
     @Expose
     @SerializedName("thumbnail")
     val thumbnail: MarvelEntityThumbnail,
     @Expose
     @SerializedName("resourceURI")
-    val resourceURI: String
-):Serializable
+    val resourceURI: String = ""
+): Serializable
 
 data class MarvelEntityThumbnail(
     @Expose
     @SerializedName("path")
-    val path: String,
+    val path: String? = "",
     @Expose
     @SerializedName("extension")
-    val extension: String):Serializable
-
-
+    val extension: String? = "") : Serializable
 
 

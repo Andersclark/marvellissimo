@@ -1,18 +1,20 @@
 package com.andersclark.marvellissimo
 
-import android.app.Activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.andersclark.marvellissimo.entities.User
+import com.andersclark.marvellissimo.entities.realm.RealmUser
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
+import io.realm.Realm
 import kotlinx.android.synthetic.main.activity_registration.*
 
 private const val TAG = "RegistrationActivity"
 class RegisterActivity : AppCompatActivity() {
+     val realm = Realm.getDefaultInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,12 @@ class RegisterActivity : AppCompatActivity() {
                     TAG,
                     "SUCCESSFULLY CREATED USER with UID: ${it.result!!.user?.uid}"
                 )
-                saveUserToFireBaseDatabase()
+                val user = User(FirebaseAuth.getInstance().uid ?: "",
+                                    registration_username.text.toString(),
+                                    registration_email.toString()
+                    )
+                saveUserToFireBaseDatabase(user)
+                saveUsertoRealm(user)
             }
             .addOnFailureListener {
                 Log.d(TAG, "Failed to create user: ${it.message}")
@@ -53,15 +60,21 @@ class RegisterActivity : AppCompatActivity() {
                     .show()
             }
     }
-    private fun saveUserToFireBaseDatabase() {
+
+    private fun saveUsertoRealm(user: User) {
+        val userToSave = RealmUser(user.uid, user.username, user.email)
+        realm.beginTransaction()
+            val realmUser = realm.copyToRealm(userToSave)
+            Log.d(TAG, "User saved to RealmDB: $realmUser")
+        realm.commitTransaction()
+
+    }
+
+    private fun saveUserToFireBaseDatabase(user: User) {
         Toast.makeText(this, "Registering user...", Toast.LENGTH_SHORT)
             .show()
-        val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().getReference("/users/$uid")
-        val user = User(
-            uid,
-            registration_username.text.toString()
-        )
+        val ref = FirebaseDatabase.getInstance().getReference("/users/${user.uid}")
+
         ref.setValue(user)
             .addOnSuccessListener {
                 Log.d(TAG, "User ${user.username} saved to Firebase")
