@@ -50,6 +50,7 @@ open class MarvelEntity(
     @SerializedName("id")
     @PrimaryKey
     var id: String = "",
+    var isFavorite: Boolean = false,
     @Expose
     @SerializedName("name")
     var name: String = "",

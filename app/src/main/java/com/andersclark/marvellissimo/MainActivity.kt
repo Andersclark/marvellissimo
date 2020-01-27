@@ -14,35 +14,39 @@ import com.google.firebase.database.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
-import io.realm.RealmList
 import io.realm.RealmResults
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
+
 lateinit var userFavorites: RealmResults<MarvelEntity>
-lateinit var activeUser: User
+//lateinit var activeUser: User
 private const val TAG = "MainActivity2"
-class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener, MenuActivity(){
+
+class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener,
+    MenuActivity() {
 
     private lateinit var adapter: RecyclerAdapter
     private val realm = Realm.getDefaultInstance()
     private var searchResults = mutableListOf<MarvelEntity>()
-    private lateinit var group : RadioGroup
-    private var marvelData =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
-    .subscribeOn(Schedulers.newThread())
-    .observeOn(AndroidSchedulers.mainThread())
-    .subscribe { result, err ->
-        if (err?.message != null)
-            Log.d(TAG, "GET-FAIL: " + err.message)
-        else {
-            Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-            searchResults.addAll(result.data.results)
-            adapter.notifyDataSetChanged()
-        }
-    }
+    private lateinit var group: RadioGroup
+    private var marvelData =
+        MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
+            .subscribeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe { result, err ->
+                if (err?.message != null)
+                    Log.d(TAG, "GET-FAIL: " + err.message)
+                else {
+                    Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                    searchResults.addAll(result.data.results)
+                    adapter.notifyDataSetChanged()
+                }
+            }
     private var searchQuery: String? = "a"
     private var editSearch: SearchView? = null
     private val userUid = FirebaseAuth.getInstance().currentUser?.uid
-    private val ref:DatabaseReference = FirebaseDatabase.getInstance().getReference("/users/$userUid")
+    private val ref: DatabaseReference =
+        FirebaseDatabase.getInstance().getReference("/users/$userUid")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,21 +57,20 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
 
         createRecyclerView(searchResults)
         checkRadioButtons()
+        checkFavoriteSwitch()
 
-        Log.d("TESTING AGAIN", ref.toString())
-
-        ref.addValueEventListener(object: ValueEventListener {
+     /*   ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(p0: DatabaseError) {
                 Log.w("ACTIVE USER", p0.details)
             }
 
             override fun onDataChange(p0: DataSnapshot) {
-                if(p0.exists()) {
+                if (p0.exists()) {
                     activeUser = p0.getValue(User::class.java)!!
                     Log.d("ACTIVE USER", "active user is ${activeUser.username}")
                 }
             }
-        })
+        })*/
     }
 
     private fun createRecyclerView(searchResults: List<MarvelEntity>) {
@@ -102,10 +105,9 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
     override fun onQueryTextSubmit(query: String): Boolean {
         Log.d("SEARCH", "searched for $query")
         searchQuery = query
-        if(group.checkedRadioButtonId == radioBtnCharacters.id) {
+        if (group.checkedRadioButtonId == radioBtnCharacters.id) {
             getMarvelCharacter()
-        }
-        else if(group.checkedRadioButtonId == radioBtnComics.id) {
+        } else if (group.checkedRadioButtonId == radioBtnComics.id) {
             getMarvelComic()
         }
         return false
@@ -118,19 +120,20 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
     }
 
     private fun getMarvelCharacter() {
-        marvelData = MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = searchQuery)
-            .subscribeOn(Schedulers.newThread())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe { result, err ->
-                if (err?.message != null)
-                    Log.d(TAG, "GET-FAIL: " + err.message)
-                else {
-                    Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-                    searchResults.clear()
-                    searchResults.addAll(result.data.results)
-                    adapter.notifyDataSetChanged()
+        marvelData =
+            MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = searchQuery)
+                .subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe { result, err ->
+                    if (err?.message != null)
+                        Log.d(TAG, "GET-FAIL: " + err.message)
+                    else {
+                        Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                        searchResults.clear()
+                        searchResults.addAll(result.data.results)
+                        adapter.notifyDataSetChanged()
+                    }
                 }
-            }
     }
 
     private fun getMarvelComic() {
@@ -150,23 +153,32 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
     }
 
     private fun getFavorites(): RealmResults<MarvelEntity> {
-        val query = realm.where<MarvelEntity>()
-        val results = query.findAll()
-        return results
+        val query = realm.where<MarvelEntity>().equalTo("isFavorite", true)
+        return query.findAll()
     }
 
-    private fun checkFavoriteSwitch(){
-        /*favoritesSwitch.setOnCheckedChangeListener { _, _ ->
-            if(favoritesSwitch.isChecked) Log.d("FAVE", "switch on"){
-                if (group.checkedRadioButtonId == radioBtnCharacters.id){
-                    // searchResult = list of favorite characters
+    private fun checkFavoriteSwitch() {
+        favoritesSwitch.setOnCheckedChangeListener { _, _ ->
+            searchResults.clear()
+
+            if (favoritesSwitch.isChecked) {
+                if (group.checkedRadioButtonId == radioBtnCharacters.id) {
+                    Log.d("FAVES", "characters")
+                    userFavorites.filter {
+                        it.title.isEmpty()
+                        searchResults.add(it)
+                    }
+                } else {
+                    if (group.checkedRadioButtonId == radioBtnComics.id) {
+                        Log.d("FAVES", "comics")
+                        userFavorites.filter {
+                            it.name.isEmpty()
+                            searchResults.add(it)
+                        }
+                    }
                 }
+                adapter.notifyDataSetChanged()
             }
-            else Log.d("FAVE", "switch off")
-        }*/
-
-        // TODO: Create list from filtering favorites on name.isEmpty() = comic
-        // TODO: Create list from filtering favorites on title.isEmpty() = character
-
+        }
     }
 }

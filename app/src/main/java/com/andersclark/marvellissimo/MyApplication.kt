@@ -13,7 +13,7 @@ class MyApplication: Application() {
         super.onCreate()
         Realm.init(this)
         FirebaseDatabase.getInstance().setPersistenceEnabled(true)
-        verifyUserIsLoggedIn()
+        // verifyUserIsLoggedIn()
     }
     private fun verifyUserIsLoggedIn() {
         val uid = FirebaseAuth.getInstance().uid

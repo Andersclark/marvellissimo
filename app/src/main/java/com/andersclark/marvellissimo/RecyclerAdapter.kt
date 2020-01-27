@@ -51,6 +51,10 @@ class RecyclerAdapter(
                 itemClickListener.onCharacterItemClicked(character)
             }
 
+            if(character.isFavorite) {
+                faveBtn.setColorFilter(Color.YELLOW)
+            } else faveBtn.clearColorFilter()
+
             faveBtn.setOnClickListener {
                 toggleFavorite(character, faveBtn)
             }
@@ -85,6 +89,7 @@ class RecyclerAdapter(
         if (flag) {
             val realm = Realm.getDefaultInstance()
             realm.executeTransaction { realm ->
+                character.isFavorite = false
                 val rows: RealmResults<MarvelEntity> =
                     realm.where<MarvelEntity>().equalTo("id", character.id).findAll()
                 rows.deleteAllFromRealm()
@@ -96,6 +101,7 @@ class RecyclerAdapter(
             Log.d("FAVE", "adding favorite...")
             val realm = Realm.getDefaultInstance()
             realm.beginTransaction()
+            character.isFavorite = true
             realm.insertOrUpdate(character)
             realm.commitTransaction()
             Log.d("FAVE", "Favorites GREW to: ${userFavorites.size}")
