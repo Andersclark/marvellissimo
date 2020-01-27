@@ -10,15 +10,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.andersclark.marvellissimo.entities.MarvelEntity
-import com.andersclark.marvellissimo.entities.User
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.card_layout.view.*
-
 
 private const val TAG = "RecyclerAdapter"
 
@@ -76,14 +69,15 @@ class RecyclerAdapter(
 
     private fun toggleFavorite(character: MarvelEntity, faveBtn: ImageButton) {
         Log.d("FAVE", "clicked fave: ${character.name}")
-
-        if (activeUser.favorites.favorites.contains(character)) {
+        Log.d("FAVE", "Favorites size: ${userFavorites.size}")
+        if (!userFavorites.contains(character)) {
             Log.d("FAVE", "adding favorite")
-            activeUser.favorites.favorites.add(character)
+            userFavorites.add(character)
             faveBtn.setColorFilter(Color.YELLOW)
         } else {
-            activeUser.favorites.favorites.remove(character)
+            userFavorites.remove(character)
             faveBtn.setColorFilter(Color.GRAY)
         }
     }
+
 }

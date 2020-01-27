@@ -13,13 +13,18 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import io.realm.Realm
+import io.realm.RealmList
+import io.realm.RealmResults
+import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
-
+lateinit var userFavorites: RealmResults<MarvelEntity>
 lateinit var activeUser: User
 private const val TAG = "MainActivity2"
 class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener, MenuActivity(){
 
     private lateinit var adapter: RecyclerAdapter
+    private val realm = Realm.getDefaultInstance()
     private var searchResults = mutableListOf<MarvelEntity>()
     private lateinit var group : RadioGroup
     private var marvelData =  MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
@@ -42,13 +47,12 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
+        userFavorites = getFavorites()
         editSearch = findViewById(R.id.search_bar)
         editSearch!!.setOnQueryTextListener(this)
 
         createRecyclerView(searchResults)
         checkRadioButtons()
-        getFavorites()
 
         Log.d("TESTING AGAIN", ref.toString())
 
@@ -63,7 +67,6 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
                     Log.d("ACTIVE USER", "active user is ${activeUser.username}")
                 }
             }
-
         })
     }
 
@@ -146,10 +149,24 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
             }
     }
 
-    private fun getFavorites() {
-        favoritesSwitch.setOnCheckedChangeListener { _, _ ->
-            if(favoritesSwitch.isChecked) Log.d("FAVE", "switch on")
+    private fun getFavorites(): RealmResults<MarvelEntity> {
+        val query = realm.where<MarvelEntity>()
+        val results = query.findAll()
+        return results
+    }
+
+    private fun checkFavoriteSwitch(){
+        /*favoritesSwitch.setOnCheckedChangeListener { _, _ ->
+            if(favoritesSwitch.isChecked) Log.d("FAVE", "switch on"){
+                if (group.checkedRadioButtonId == radioBtnCharacters.id){
+                    // searchResult = list of favorite characters
+                }
+            }
             else Log.d("FAVE", "switch off")
-        }
+        }*/
+
+        // TODO: Create list from filtering favorites on name.isEmpty() = comic
+        // TODO: Create list from filtering favorites on title.isEmpty() = character
+
     }
 }
