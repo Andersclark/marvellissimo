@@ -36,11 +36,11 @@ class RecyclerAdapter(
         var faveBtn: ImageButton = itemView.favoriteButton
 
         fun bind(character: MarvelEntity) {
-            if (character.name != null) {
+            if (character.name.isNotEmpty()) {
                 itemName.text = character.name
             } else itemName.text = character.title
 
-            itemDescription.text = character.description
+            //itemDescription.text = character.description
 
             val imagePath =
                 character.thumbnail.path + "/portrait_medium." + character.thumbnail.extension
