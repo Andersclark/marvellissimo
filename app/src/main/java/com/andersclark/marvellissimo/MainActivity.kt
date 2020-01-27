@@ -7,11 +7,15 @@ import android.widget.RadioGroup
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andersclark.marvellissimo.entities.MarvelEntity
+import com.andersclark.marvellissimo.entities.User
 import com.andersclark.marvellissimo.services.MarvelClient
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.*
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 
+lateinit var activeUser: User
 private const val TAG = "MainActivity2"
 class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener, MenuActivity(){
 
@@ -32,6 +36,8 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
     }
     private var searchQuery: String? = "a"
     private var editSearch: SearchView? = null
+    private val userUid = FirebaseAuth.getInstance().currentUser?.uid
+    private val ref:DatabaseReference = FirebaseDatabase.getInstance().getReference("/users/$userUid")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +49,22 @@ class MainActivity :  RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTex
         createRecyclerView(searchResults)
         checkRadioButtons()
         getFavorites()
+
+        Log.d("TESTING AGAIN", ref.toString())
+
+        ref.addValueEventListener(object: ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+                Log.w("ACTIVE USER", p0.details)
+            }
+
+            override fun onDataChange(p0: DataSnapshot) {
+                if(p0.exists()) {
+                    activeUser = p0.getValue(User::class.java)!!
+                    Log.d("ACTIVE USER", "active user is ${activeUser.username}")
+                }
+            }
+
+        })
     }
 
     private fun createRecyclerView(searchResults: List<MarvelEntity>) {
