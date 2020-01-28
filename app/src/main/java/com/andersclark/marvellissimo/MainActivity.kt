@@ -30,7 +30,7 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     private var searchResults = mutableListOf<MarvelEntity>()
     private lateinit var group: RadioGroup
     private var marvelData =
-        MarvelClient.marvelService.getCharacters(limit = 7, nameStartsWith = "spider")
+        MarvelClient.marvelService.getCharacters(limit = 15, nameStartsWith = "a")
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { result, err ->
@@ -121,7 +121,7 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
 
     private fun getMarvelCharacter() {
         marvelData =
-            MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = searchQuery)
+            MarvelClient.marvelService.getCharacters(limit = 15, nameStartsWith = searchQuery)
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { result, err ->
@@ -137,7 +137,7 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     }
 
     private fun getMarvelComic() {
-        marvelData = MarvelClient.marvelService.getComics(limit = 10, titleStartsWith = searchQuery)
+        marvelData = MarvelClient.marvelService.getComics(limit = 15, titleStartsWith = searchQuery)
             .subscribeOn(Schedulers.newThread())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe { result, err ->
