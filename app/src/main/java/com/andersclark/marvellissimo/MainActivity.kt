@@ -7,16 +7,17 @@ import android.widget.RadioGroup
 import android.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.andersclark.marvellissimo.entities.MarvelEntity
-import com.andersclark.marvellissimo.entities.User
 import com.andersclark.marvellissimo.services.MarvelClient
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.*
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.realm.Realm
 import io.realm.RealmResults
 import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 lateinit var userFavorites: RealmResults<MarvelEntity>
 //lateinit var activeUser: User
@@ -77,7 +78,10 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
         val layoutManager = LinearLayoutManager(this)
         recycler_view.layoutManager = layoutManager
 
-        adapter = RecyclerAdapter(searchResults, this)
+        adapter = RecyclerAdapter(
+            searchResults,
+            this
+        )
         recycler_view.adapter = adapter
     }
 
@@ -102,7 +106,6 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     }
 
     override fun onQueryTextSubmit(query: String): Boolean {
-        Log.d("SEARCH", "searched for $query")
         searchQuery = query
         if (group.checkedRadioButtonId == radioBtnCharacters.id) {
             getMarvelCharacter()
@@ -113,7 +116,6 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     }
 
     override fun onQueryTextChange(newText: String): Boolean {
-        //for eventual filtering purposes - reacts on each keystroke
         Log.d("SEARCH", "searching for $newText")
         return false
     }
@@ -135,13 +137,10 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
                         }
                     }
         } else {
-            userFavorites.filter {
-                var result: MarvelEntity = MarvelEntity()
-                if(it.name.isNotBlank()) {
-                    result = it
+            for (item in userFavorites)
+                if (item.name.isNotBlank()) {
+                    searchResults.add(item)
                 }
-                searchResults.add(result)
-            }
             adapter.notifyDataSetChanged()
         }
     }
@@ -163,16 +162,14 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
                         }
                     }
         } else {
-            userFavorites.filter {
-                var result: MarvelEntity = MarvelEntity()
-                if(it.title.isNotBlank()) {
-                    result = it
+            for (item in userFavorites)
+                if (item.title.isNotBlank()) {
+                    searchResults.add(item)
                 }
-                searchResults.add(result)
-            }
             adapter.notifyDataSetChanged()
         }
     }
+
 
     private fun getFavorites(): RealmResults<MarvelEntity> {
         val query = realm.where<MarvelEntity>().equalTo("isFavorite", true)
@@ -181,12 +178,8 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
 
     private fun checkFavoriteSwitch() {
         favoritesSwitch.setOnCheckedChangeListener { _, _ ->
-            Log.d("FAVES", favoritesSwitch.isChecked.toString())
-
-            if (favoritesSwitch.isChecked) {
-                if (group.checkedRadioButtonId == radioBtnCharacters.id) getMarvelCharacter()
-                else getMarvelComic()
-            }
+            if (group.checkedRadioButtonId == radioBtnCharacters.id) getMarvelCharacter()
+            else getMarvelComic()
         }
     }
 }
