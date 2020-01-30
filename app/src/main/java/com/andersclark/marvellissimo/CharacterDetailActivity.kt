@@ -1,12 +1,11 @@
 package com.andersclark.marvellissimo
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_character_details.*
+
 
 class CharacterDetailActivity: MenuActivity() {
 
@@ -26,8 +25,9 @@ class CharacterDetailActivity: MenuActivity() {
     }
     
     private fun goToUrl(url: String) {
-        val uriUrl: Uri = Uri.parse(url)
-        val launchBrowser = Intent(Intent.ACTION_VIEW, uriUrl)
-        startActivity(launchBrowser)
+        val safeUrl = url.replace("http", "https")
+        val intent = Intent(this, WebViewActivity::class.java)
+        intent.putExtra("url", safeUrl)
+        startActivity(intent)
     }
 }
