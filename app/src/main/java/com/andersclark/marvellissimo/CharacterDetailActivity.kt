@@ -18,7 +18,7 @@ class CharacterDetailActivity: MenuActivity() {
         nameTitle.text = if(marvelEntity.name.isEmpty()) {marvelEntity.title} else {marvelEntity.name}
         description.text = marvelEntity.description
 
-        val imagePath=marvelEntity.thumbnail.path+"/portrait_xlarge."+marvelEntity.thumbnail.extension
+        val imagePath=marvelEntity.thumbnail!!  .path+"/portrait_xlarge."+marvelEntity.thumbnail!!.extension
         val safeImagePath=imagePath.replace("http", "https")
         Picasso.get().load(safeImagePath).into(characterImage)
 

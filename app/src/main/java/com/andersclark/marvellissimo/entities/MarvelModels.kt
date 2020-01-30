@@ -62,8 +62,7 @@ open class MarvelEntity(
     var description: String = "",
     @Expose
     @SerializedName("thumbnail")
-    @Ignore // TODO: Implement nested class: MarvelEntityThumbnal
-    var thumbnail: MarvelEntityThumbnail = MarvelEntityThumbnail("", ""),
+    var thumbnail: MarvelEntityThumbnail? = null,// = MarvelEntityThumbnail("", ""),
     @Expose
     @SerializedName("resourceURI")
     var resourceURI: String = "",
