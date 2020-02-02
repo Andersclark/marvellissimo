@@ -75,8 +75,9 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     }
 
     override fun onCharacterItemClicked(character: MarvelEntity) {
+        Log.d("myTag","onCharacterItemClicked "+ character.urls)
         val intent = Intent(this, CharacterDetailActivity::class.java)
-        intent.putExtra("marvelEntity", character)
+        intent.putExtra("id", character.id)
         startActivity(intent)
     }
 
