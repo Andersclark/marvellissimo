@@ -59,7 +59,7 @@ open class MarvelEntity(
     var title: String = "",
     @Expose
     @SerializedName("description")
-    var description: String = "",
+    var description: String? = "",
     @Expose
     @SerializedName("thumbnail")
     var thumbnail: MarvelEntityThumbnail? = null,// = MarvelEntityThumbnail("", ""),

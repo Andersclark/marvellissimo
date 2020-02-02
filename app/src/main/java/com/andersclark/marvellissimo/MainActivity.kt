@@ -42,8 +42,9 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
         userFavorites = getFavorites()
         editSearch = findViewById(R.id.search_bar)
         editSearch!!.setOnQueryTextListener(this)
-        getDefaultList()
         createRecyclerView(searchResults)
+        //get a default character-list
+        getMarvelCharacter()
         checkRadioButtons()
         checkFavoriteSwitch()
 
@@ -60,27 +61,6 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
                    }
                }
            })*/
-    }
-
-    private fun getDefaultList(){
-        val realmResult = searchInRealm("a", true)
-        if(realmResult.size < 15){
-            var marvelData =
-                MarvelClient.marvelService.getCharacters(limit = 15, nameStartsWith = "a")
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { result, err ->
-                        if (err?.message != null){
-                            searchResults.addAll(realmResult)
-                        }else {
-                            searchResults.addAll(result.data.results)
-                            saveToRealm(result.data.results)
-                            adapter.notifyDataSetChanged()
-                        }
-                    }
-        }else{
-            searchResults.addAll(realmResult)
-        }
     }
 
     private fun createRecyclerView(searchResults: List<MarvelEntity>) {
@@ -132,19 +112,29 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     private fun getMarvelCharacter() {
         searchResults.clear()
         if (!favoritesSwitch.isChecked) {
-            marvelData =
-                MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = searchQuery)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { result, err ->
-                        if (err?.message != null)
-                            Log.d(TAG, "GET-FAIL: " + err.message)
-                        else {
-                            Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-                            searchResults.addAll(result.data.results)
-                            adapter.notifyDataSetChanged()
+            val realmResult = searchInRealm(searchQuery, true)
+
+            if(realmResult.size < 10){
+                var marvelData =
+                    MarvelClient.marvelService.getCharacters(limit = 10, nameStartsWith = searchQuery)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { result, err ->
+                            if (err?.message != null){
+                                Log.d(TAG, "GET-FAIL: " + err.message)
+                                searchResults.addAll(realmResult)
+                                adapter.notifyDataSetChanged()
+                            }else {
+                                Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
+                                searchResults.addAll(result.data.results)
+                                saveToRealm(result.data.results)
+                                adapter.notifyDataSetChanged()
+                            }
                         }
-                    }
+            }else{
+                searchResults.addAll(realmResult)
+                adapter.notifyDataSetChanged()
+            }
         } else {
             for (item in userFavorites)
                 if (item.name.isNotBlank()) {
@@ -157,19 +147,28 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     private fun getMarvelComic() {
         searchResults.clear()
         if (!favoritesSwitch.isChecked) {
-            marvelData =
-                MarvelClient.marvelService.getComics(limit = 10, titleStartsWith = searchQuery)
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe { result, err ->
-                        if (err?.message != null)
-                            Log.d(TAG, "GET-FAIL: " + err.message)
-                        else {
-                            Log.d(TAG, "GET-SUCCESS: I got a CharacterDataWrapper $result")
-                            searchResults.addAll(result.data.results)
-                            adapter.notifyDataSetChanged()
+            val realmResult = searchInRealm(searchQuery, false)
+            if(realmResult.size < 10){
+                var marvelData =
+                    MarvelClient.marvelService.getComics(limit = 10, titleStartsWith = searchQuery)
+                        .subscribeOn(Schedulers.newThread())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe { result, err ->
+                            if (err?.message != null){
+                                Log.d(TAG, "GET-FAIL: " + err.message)
+                                searchResults.addAll(realmResult)
+                                adapter.notifyDataSetChanged()
+                            }else {
+                                Log.d(TAG, "GET-SUCCESS: I got a ComicDataWrapper $result")
+                                saveToRealm(result.data.results)
+                                searchResults.addAll(result.data.results)
+                                adapter.notifyDataSetChanged()
+                            }
                         }
-                    }
+            }else{
+                searchResults.addAll(realmResult)
+                adapter.notifyDataSetChanged()
+            }
         } else {
             for (item in userFavorites)
                 if (item.title.isNotBlank()) {
@@ -201,17 +200,10 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     }
 
     private fun searchInRealm(startsWith: String?, searchForCharacter: Boolean) : RealmResults<MarvelEntity>{
-        val result: RealmResults<MarvelEntity>
-
         if(searchForCharacter){
-            result = realm.where<MarvelEntity>().beginsWith("name", startsWith, Case.INSENSITIVE).findAll()
-            Log.d("RealmTag", "searchInRealm for $startsWith size: "+result.size )
-
+            return realm.where<MarvelEntity>().beginsWith("name", startsWith, Case.INSENSITIVE).findAll()
         }else{
-            result = realm.where<MarvelEntity>().beginsWith("title", startsWith, Case.INSENSITIVE).findAll()
-            Log.d("RealmTag", "searchInRealm for $startsWith: "+result )
-
+            return realm.where<MarvelEntity>().beginsWith("title", startsWith, Case.INSENSITIVE).findAll()
         }
-        return result
     }
 }
