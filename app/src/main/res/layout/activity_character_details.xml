@@ -3,9 +3,9 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:fillViewport="true"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="#000000"
+    android:fillViewport="true"
     android:orientation="vertical">
 
     <TextView
@@ -60,7 +60,6 @@
         android:layout_width="0dp"
         android:layout_height="60dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="32dp"
         android:background="@drawable/rounded_button"
@@ -68,7 +67,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/nameTitle"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/nameTitle"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintStart_toStartOf="@+id/nameTitle" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

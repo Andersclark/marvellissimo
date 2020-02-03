@@ -20,8 +20,7 @@ import io.realm.kotlin.where
 import kotlinx.android.synthetic.main.activity_main.*
 
 lateinit var userFavorites: RealmResults<MarvelEntity>
-//lateinit var activeUser: User
-private const val TAG = "MainActivity2"
+private const val TAG = "MainActivity"
 
 class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryTextListener,
     MenuActivity() {
@@ -30,11 +29,10 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
     private val realm = Realm.getDefaultInstance()
     private var searchResults = mutableListOf<MarvelEntity>()
     private lateinit var group: RadioGroup
-    private var searchQuery: String? = "a"
+    private var searchQuery: String? = "Wolverine"
     private var editSearch: SearchView? = null
     private val userUid = FirebaseAuth.getInstance().currentUser?.uid
-    private val ref: DatabaseReference =
-        FirebaseDatabase.getInstance().getReference("/users/$userUid")
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,24 +41,9 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
         editSearch = findViewById(R.id.search_bar)
         editSearch!!.setOnQueryTextListener(this)
         createRecyclerView(searchResults)
-        //get a default character-list
         getMarvelCharacter()
         checkRadioButtons()
         checkFavoriteSwitch()
-
-
-        /*   ref.addValueEventListener(object : ValueEventListener {
-               override fun onCancelled(p0: DatabaseError) {
-                   Log.w("ACTIVE USER", p0.details)
-               }
-
-               override fun onDataChange(p0: DataSnapshot) {
-                   if (p0.exists()) {
-                       activeUser = p0.getValue(User::class.java)!!
-                       Log.d("ACTIVE USER", "active user is ${activeUser.username}")
-                   }
-               }
-           })*/
     }
 
     private fun createRecyclerView(searchResults: List<MarvelEntity>) {
@@ -159,14 +142,14 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
                                 Log.d(TAG, "GET-FAIL: " + err.message)
                                 searchResults.addAll(realmResult)
                                 adapter.notifyDataSetChanged()
-                            }else {
+                            } else {
                                 Log.d(TAG, "GET-SUCCESS: I got a ComicDataWrapper $result")
                                 saveToRealm(result.data.results)
                                 searchResults.addAll(result.data.results)
                                 adapter.notifyDataSetChanged()
                             }
                         }
-            }else{
+            } else {
                 searchResults.addAll(realmResult)
                 adapter.notifyDataSetChanged()
             }
@@ -200,10 +183,10 @@ class MainActivity : RecyclerAdapter.OnItemClickListener, SearchView.OnQueryText
         }
     }
 
-    private fun searchInRealm(startsWith: String?, searchForCharacter: Boolean) : RealmResults<MarvelEntity>{
-        if(searchForCharacter){
+    private fun searchInRealm(startsWith: String?, searchForCharacter: Boolean) : RealmResults<MarvelEntity> {
+        if (searchForCharacter){
             return realm.where<MarvelEntity>().beginsWith("name", startsWith, Case.INSENSITIVE).findAll()
-        }else{
+        } else {
             return realm.where<MarvelEntity>().beginsWith("title", startsWith, Case.INSENSITIVE).findAll()
         }
     }

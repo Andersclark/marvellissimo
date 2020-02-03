@@ -2,7 +2,6 @@ package com.andersclark.marvellissimo
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.squareup.picasso.Picasso
 import io.realm.Realm

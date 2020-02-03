@@ -49,11 +49,11 @@ object MarvelClient {
             .addInterceptor(logging)
         return builder.build()
     }
-    fun String.md5(): String {
-        val MD5 = "MD5"
+    private fun String.md5(): String {
+        val md5 = "MD5"
         try { // Create MD5 Hash
             val digest = MessageDigest
-                .getInstance(MD5)
+                .getInstance(md5)
             digest.update(this.toByteArray())
             val messageDigest = digest.digest()
             // Create Hex String

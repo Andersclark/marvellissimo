@@ -27,20 +27,18 @@ class RecyclerAdapter(
         fun onCharacterItemClicked(character: MarvelEntity)
     }
 
-    inner class ViewHolder(itemView: View) :
+    inner class ViewHolder(itemView: View):
         RecyclerView.ViewHolder(itemView) {
 
-        var itemThumbnail: ImageView = itemView.thumbnail
-        var itemName: TextView = itemView.name
-        var itemDescription: TextView = itemView.description
-        var faveBtn: ImageButton = itemView.favoriteButton
+        private var itemThumbnail: ImageView = itemView.thumbnail
+        private var itemName: TextView = itemView.name
+        private var faveBtn: ImageButton = itemView.favoriteButton
 
         fun bind(character: MarvelEntity) {
             if (character.name.isNotEmpty()) {
                 itemName.text = character.name
             } else itemName.text = character.title
 
-            //itemDescription.text = character.description
 
             val imagePath =
                 character.thumbnail!!.path + "/portrait_medium." + character.thumbnail!!.extension
