@@ -2,6 +2,7 @@ package com.andersclark.marvellissimo.entities
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
+import io.realm.RealmList
 import io.realm.RealmObject
 import io.realm.annotations.Ignore
 import io.realm.annotations.PrimaryKey
@@ -68,8 +69,8 @@ open class MarvelEntity(
     var resourceURI: String = "",
     @Expose
     @SerializedName("urls")
-    @Ignore  // TODO: Implement nested class
-    var urls: List<UrlEntity> = mutableListOf())
+    var urls: RealmList<UrlEntity> = RealmList()
+)
     :Serializable, RealmObject()
 
 open class UrlEntity(

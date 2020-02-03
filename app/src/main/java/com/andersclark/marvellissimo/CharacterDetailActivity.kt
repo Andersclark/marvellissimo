@@ -26,13 +26,9 @@ class CharacterDetailActivity: MenuActivity() {
             val safeImagePath=imagePath.replace("http", "https")
             Picasso.get().load(safeImagePath).into(characterImage)
 
-            Log.d("myTag", "länkar : "+marvelEntity.urls)
-
             if(marvelEntity.urls.size > 0){
-                Log.d("myTag", "har egna länkar : "+marvelEntity.urls.get(0).url)
-                goToBtn.setOnClickListener{goToUrl(marvelEntity.urls.get(0).url)}
+                goToBtn.setOnClickListener{goToUrl(marvelEntity.urls.get(0)!!.url)}
             }else{
-                Log.d("myTag", "har INTE egna länkar ")
                 goToBtn.setOnClickListener{goToUrl("https://www.marvel.com/")}
             }
         }
@@ -40,7 +36,6 @@ class CharacterDetailActivity: MenuActivity() {
     
     private fun goToUrl(url: String) {
         val safeUrl = if(!url.startsWith("https")) url.replace("http", "https") else url
-        Log.d("myTag", "safeUrl: $safeUrl")
         val intent = Intent(this, WebViewActivity::class.java)
         intent.putExtra("url", safeUrl)
         startActivity(intent)
