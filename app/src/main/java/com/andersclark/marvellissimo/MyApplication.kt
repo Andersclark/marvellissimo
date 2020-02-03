@@ -2,7 +2,6 @@ package com.andersclark.marvellissimo
 
 import android.app.Application
 import android.content.Intent
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import io.realm.Realm

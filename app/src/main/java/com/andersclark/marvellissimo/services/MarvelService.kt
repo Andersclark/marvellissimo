@@ -1,7 +1,5 @@
 package com.andersclark.marvellissimo.services
-import com.andersclark.marvellissimo.entities.MarvelEntity
 import com.andersclark.marvellissimo.entities.MarvelResponse
-import com.andersclark.marvellissimo.entities.MarvelResponseData
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -9,11 +7,10 @@ import retrofit2.http.Query
 interface MarvelService {
 
 
-// CHARACTERS  //
-@GET("characters")
-fun getCharacterById(
-    @Query("characterId") id: String
-): Single<MarvelResponse>
+    @GET("characters")
+    fun getCharacterById(
+        @Query("characterId") id: String
+    ): Single<MarvelResponse>
 
     @GET("characters")
     fun getCharacters(
@@ -33,7 +30,6 @@ fun getCharacterById(
         @Query("offset") offset: Int? = null
     ): Single<MarvelResponse>
 
-// COMICS  //
 
     @GET("comics")
     fun getComicById(
