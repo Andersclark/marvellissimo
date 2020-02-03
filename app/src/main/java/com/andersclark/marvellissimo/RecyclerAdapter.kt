@@ -43,7 +43,7 @@ class RecyclerAdapter(
             //itemDescription.text = character.description
 
             val imagePath =
-                character.thumbnail.path + "/portrait_medium." + character.thumbnail.extension
+                character.thumbnail!!.path + "/portrait_medium." + character.thumbnail!!.extension
             val safeImagePath = imagePath.replace("http", "https")
             Picasso.get().load(safeImagePath).into(itemThumbnail)
 
@@ -88,10 +88,10 @@ class RecyclerAdapter(
 
         if (flag) {
             val realm = Realm.getDefaultInstance()
-            realm.executeTransaction { realm ->
+            realm.executeTransaction {
                 character.isFavorite = false
                 val rows: RealmResults<MarvelEntity> =
-                    realm.where<MarvelEntity>().equalTo("id", character.id).findAll()
+                    it.where<MarvelEntity>().equalTo("id", character.id).findAll()
                 rows.deleteAllFromRealm()
             }
             Log.d("FAVE", "Favorites SHRUNK to: ${userFavorites.size}")

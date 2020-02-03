@@ -34,6 +34,10 @@
             android:name=".AboutActivity"
             android:parentActivityName=".MainActivity"
             ></activity>
+        <activity
+        android:name=".WebViewActivity"
+        android:parentActivityName=".CharacterDetailActivity"
+        ></activity>
     </application>
 
 </manifest>

@@ -6,6 +6,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 
 open class MenuActivity: AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -23,9 +24,9 @@ open class MenuActivity: AppCompatActivity() {
                 true
             }
             R.id.logOut -> {
-                //log out 
-                Log.d("myTag", "Clicked Log Out ")
-
+                FirebaseAuth.getInstance().signOut()
+                val intent = Intent(this, LoginActivity::class.java)
+                startActivity(intent)
                 true
             }
             else -> super.onOptionsItemSelected(item)
